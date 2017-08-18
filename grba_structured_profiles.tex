@@ -1,0 +1,179 @@
+\documentclass[11pt,twoside,letterpaper]{report}
+
+\usepackage[letterpaper, twoside, margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+
+%\usepackage{fontspec}
+%\setmainfont{Source Serif Pro}
+%\setsansfont{Source Sans Pro}
+%\setmonofont{Source Code Pro}
+
+\usepackage{mathspec}
+\setallmainfonts{Source Serif Pro}
+\setallsansfonts{Source Sans Pro}
+\setallmonofonts{Source Code Pro}
+
+\pagestyle{fancy}
+\fancyhead{} % clear all header fields
+\fancyhead[RO,LE]{\bfseries Structured Energy Profiles in GRB Afterglows}
+\fancyfoot{} % clear all footer fields
+\fancyfoot[LE,RO]{\thepage}
+% \fancyfoot[LO,CE]{From: K. Grant}
+\fancyfoot[CO,RE]{Nathan R. Frank}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+\title{Structured Energy Profiles in Gamma-Ray Burst Afterglows}
+\author{Nathan R. Frank}
+\date{July 2017}
+\maketitle
+
+\section{Calculation of Observer Time}
+The calculation of the observer time $t_{obs}$ for emission emitted by the Afterglow of a Gamma-Ray Burst proceeds differently in various texts.  Since this is fundamental to the derivation of the Equal Arrival Time Surface (EATS), which defines the region of integration when calculating brightness profiles, we will clarify its definition.
+
+In the work by Granot (2008), which our derivation largely follows, he defines the observer time as:
+\begin{equation}
+t_{obs} = \frac{R_l}{2c(4-k)\Gamma_l^2},
+\end{equation}
+where $c$ is the speed of light, $k$ the power law index of the circumburst medium density profile, and $R_l$ and $\Gamma_l$ are the line of sight radius and Lorentz Factor, respectively. This form can be achieved by either (1) direct substitution of the standard oberver time formula, for arbitrary $R$ and $\Gamma$ using an expression for $\Gamma = \Gamma(\Gamma_l, R_l, R)$ or (2) transformation of the standard observer time formula or its differential form to line of sight values. In practice these methods are largely the same.
+
+The standard $t_{obs}$ expression results from integrating the differential form, using  as follows (e.g. Dai \& Lu, 2008):
+\begin{align}
+\delta t_{obs} &= \frac{\delta R}{2c\Gamma^2} \\
+t_{obs} &\propto \int \frac{dR R^{3-k}}{2c} \\
+t_{obs} &\propto \frac{R^{4-k}}{2c(4-k)} \\
+t_{obs} &= \frac{R}{2c(4-k)\Gamma^2}
+\end{align}
+Performing a simple substitution using $\Gamma = \Gamma_l y^{\frac{k-3}{2}}$, where $y = R/R_l$, gives
+\begin{equation}
+t_{obs} = \frac{R}{2c(4-k)\Gamma_l^2y^{k-3}} = \frac{yR_l}{2c(4-k)\Gamma_l^2y^{k-3}} = \frac{R_l}{2c(4-k)\Gamma_l^2}y^{4-k}.
+\end{equation}
+If we (1) assume this is calculated at $R=R_l$, i.e. for the shell closest to the observer, then $y=1$ and we recover the form defined by Granot. Similarly, if we (2) make the transformation $R \rightarrow R_l$ and $\Gamma \rightarrow \Gamma_l$ in the original $t_{obs}$ expression, we also recover the form presented by Granot.
+
+Finally, if we perform the substitution indicated by equation (6) prior to integrating the $t_{obs}$ differential, and perform a definite integration, we can combine the substitution and transformation methods. The expression for $\Gamma = \Gamma(\Gamma_l, R_l, R)$ used in the substitution performed in equation (6) is the result of forming a ratio between two expressions for the proportionality between $\Gamma$ and $R$, one for arbitrary values and one for line of sight values, namely:
+\begin{align}
+\frac{\Gamma}{\Gamma_l} &\propto \left(\frac{E}{E_l}\right)^{1/2}\left(\frac{R}{R_l}\right)^{(k-3)/2}, \\
+\Gamma &= \Gamma_l \left(\frac{E}{E_l}\right)^{1/2}y^{(k-3)/2}.
+\end{align}
+We can form a similar expression using the ratio between line of sight and emission axis (subscript "A") values
+\begin{equation}
+\Gamma_l = \Gamma_A \left(\frac{E_l}{E_A}\right)^{1/2}\left(\frac{R_l}{R_A}\right)^{(k-3)/2}
+\end{equation}
+Substituting gives an equation for $\Gamma = \Gamma(\Gamma_A, E/E_A, R/R_A)$ as
+\begin{equation}
+\Gamma = \Gamma_A \left(\frac{E}{E_A}\right)^{1/2} \left( \frac{R_l}{R_A} y \right) ^{(k-3)/2}.
+\end{equation}
+If we further define $\Gamma_A$ as the Lorentz Factor along the main axis at $R=R_l$, i.e. for the forward most shell of emission, then $R_A = R_l$ and we find $\Gamma = \Gamma_A \left(\frac{E}{E_A}\right)^{1/2} \left( y \right) ^{(k-3)/2}$.
+This allows for a re-derivation of the observer time as follows
+\begin{align}
+t_{obs} &= \int_0^{R_l} \frac{dR}{2c\Gamma^2} = \int_0^1 \frac{dy R_l}{2c\Gamma_A^2 (E/E_A) y^{k-3}}, \\
+&= \frac{R_l}{2c(4-k)\Gamma_A^2 (E/E_A) } y^{4-k} \biggr\rvert_0^1, \\
+&= \frac{R_l}{2c(4-k)\Gamma_A^2 (E/E_A)} = \frac{R_A}{2c(4-k)\Gamma_A^2 (E/E_A)}.
+\end{align}
+
+\section{The Equal Arrival Time Surface (EATS)}
+We begin with the assumption of a spherical blast wave, expanding relativistically. We can relate the observed arrival time $t_{obs}$ of a photon emitted at some lab frame time $t$ following the burst from an angle $\theta$ relative to the line of sight (LOS) to the source (i.e. away from the central emission axis) along an emitting shell at a radius $R$ via
+\begin{equation}
+t_{obs} = t - \frac{R}{c}\cos \theta,
+\end{equation}
+where $c$ is the speed of light. An observer time of $t_{obs} = 0$ corresponds to a photon emitted from the origin ($R = 0$) at $t = 0$, i.e. when the burst was initially accelerated. A single observed arrival time defines an equal arrival time surface (EATS), i.e. the locus of points from which emission arriving to an observer at a common arrival time is emitted. We normalize the radial distance by its maximal value on the equal arrival time surface (EATS) of photons to the observer along the line of sight (LOS), at $\theta = 0$, as $y \equiv R/R_l$, where $R_l$ denotes this maximum LOS value.
+
+If we perform a calculation of observer time similar to above at $\theta = 0$, i.e. along the LOS, we find
+\begin{align}
+t - \frac{R}{c} &= \int_0^t \left( 1 - \beta \right) dt \approx \int_0^R \frac{dR}{2c \Gamma^2}, \\
+&\approx \int_0^R \frac{R_l dy}{2c(4-k) \Gamma_A^2 (E/E_A) y^{k-3}}, \\
+t - \frac{R}{c} &\approx \frac{R_l y^{4-k}}{2c(4-k)\Gamma_A^2 (E/E_A)}.
+\end{align}
+Using the definition of $t_{obs}$ above we also note $t - \frac{R}{c}  = t_{obs}y^{4-k}$. Furthermore, if we expand $\cos \theta$ using a small angle approximation we find
+\begin{align}
+t - \frac{R}{c}\cos \theta &\approx t - \frac{R}{c}\left( 1 - \frac{1}{2}\theta^2 \right), \\
+&\approx t - \frac{R}{c} + \frac{R\theta^2}{2c}, \\
+&\approx t_{obs}y^{4-K}  + \frac{R\theta^2}{2c}.
+\end{align}
+Rearranging this expression and substituting out $R = yR_l$ and our expression in equation (13) for $t_{obs}$ we find
+\begin{equation}
+\Gamma_A^2 \theta^2 \approx \frac{1 - y^{4-k}}{(E/E_A)(4-k)y}.
+\end{equation}
+\begin{align*}
+\cdots
+\end{align*}
+This expression replaces equation (12) in the Preliminary Exam Report. Everything that follows has exactly the same form with the substitution $\Gamma_l \rightarrow \Gamma_A$, with the defintion of $\Gamma_A$ as stated above.
+\begin{align*}
+\cdots
+\end{align*}
+
+\section{PLS G Brightness Profile}
+\begin{center}
+(see section 3.2 of Preliminary Exam Report)
+\end{center}
+The modified intensity funciton for PLS G (equation 28 in the Preliminary Exam Report) becomes
+\begin{equation}
+I_{\nu , G} (x) = \nu^{b_G} \frac{2(4-k)^2 R_l}{\pi} \int_{y_-(x)}^{y_+(x)} dy \Gamma_A^{4(1-b_G)} (E/E_A)^{2(1-b_G)} y^{\frac{b(4-k)+4-3k}{2}} \chi^{\frac{7k-23+b_G(13+k)}{6(4-k)}} \left[ (7-2k)\chi y^{4-k} + 1 \right]^{b_G -2}.
+\end{equation}
+
+\section{PLS H Brightness Profile}
+\begin{center}
+(see section 3.3 of Preliminary Exam Report)
+\end{center}
+The modified intensity funciton for PLS H (equation 36 in the Preliminary Exam Report) becomes
+\begin{equation}
+I_{\nu , H} (x) \propto \nu^{b_H} \frac{\left[ \Gamma_A (E/E_A) \right]^{3-b_H} y^{a_H + \frac{11-3k-b_H(5-k)}{2}}}{|(5-k)y^{4-k}-1|\left[ (7-2k) y^{4-k} + 1 \right]^{2-b_H}}.
+\end{equation}
+In addition note the factors of $\chi$ have been dropped from this expression compared to equation 36 in the Preliminary Exam Report because, by definition, $\chi = 1$ on the surface of the EATS where $I_{\nu , H}$ is evaluated.
+
+\section{Flux Calculation}
+The flux integral has the form
+\begin{equation}
+F_{\nu} \propto \int_0^{2\pi} d\phi \int_0^1 I_{\nu}(y, \chi (y, x))xdx.
+\end{equation}
+If we define $r \equiv R_{\perp}/R_l$, then we note that $x \equiv \frac{R_{\perp}}{R_{\perp ,max}} = R_{\perp}/R_l (E/E_A)^{1/2}\Gamma_A (5-k)^{\frac{5-k}{2(4-k)}} =  r(E/E_A)^{1/2}\Gamma_A (5-k)^{\frac{5-k}{2(4-k)}}$. This then changes the expression for $\chi$ in equation 16 of the Preliminary Exam Report to 
+\begin{equation}
+\chi =  \frac{y - (4-k)(E/E_A)\Gamma_A^2 r^2}{y^{5-k}},
+\end{equation}
+thus transforming our flux expression to
+\begin{equation}
+F_{\nu} \propto R_l^3 \int_0^{2\pi} d\phi \int_0^{r_{max}} I_{\nu}(y, \chi (y, r))rdr
+\end{equation}
+
+We can then make a change of variables to a coordinate system defined by $(\phi, r', y)$, where $r'$ is defined as a vector in a constant-$y$ plane from the point of intersection of the main emission axis with the $y$-plane to a given point at an angle $\phi$ on the surface of integration, which is, by definition, at a constant $\chi$ value in the range $[1, \infty)$.
+
+This results in a modified flux expression as follows
+\begin{equation}
+F_{\nu} \propto R_l^3 \int\int\int dyI_{\nu}(y, \chi(y, r', \phi)) r'dr' d\phi.
+\end{equation}
+We next define a new variable $r_0'$ which is the length of $r'$ at $\phi = 0$ (i.e. $r_0' \equiv r'(\phi = 0)$). We then make another change of coordinates by noting $r' = r_0' f(\phi)$, where $f(\phi)$ is a function which scales to follow a constant-$\chi$ integration contour, and our flux expression becomes
+\begin{align}
+F_{\nu} &\propto R_l^3 \int\int\int d[r_0'f(\phi)] r_0'f(\phi) d\phi dy I_{\nu}(y, \chi(y, r_0', \phi)) \\
+&\propto R_l^3 \int \int\int dy  r_0'd r_0' I_{\nu}(y, \chi(y, r_0', \phi))f(\phi)^2d\phi \\
+&\propto R_l^3 \int_0^1dy \int_0^{r_{0, max}'} dr_0' \int_0^{2\pi} r_0' f(\phi)^2 I_{\nu}(y, \chi(y, r_0', \phi)) .
+\end{align}
+
+The value of $r_{0, max}'$ is determined by solving for $r_0'$ at $\chi = 1$. We first note the expression for $r$ as follows
+\begin{align}
+r^2 &= (r' \cos \phi + y\tan \theta _V)^2 + (r' \sin \phi )^2, \\
+&= (r_0' + y \tan \theta _V)^2.
+\end{align}
+This leads to a modified expression for $\chi$:
+\begin{equation}
+\chi = \frac{y - (4-k)\Gamma_A^2(E/E_A)(r_0' + y \tan \theta _V)^2}{y^{5-k}},
+\end{equation}
+where 
+\begin{equation}
+E/E_A = 2^{-\frac{\theta_0'}{\sigma}^{2\kappa}}.
+\end{equation}
+
+\subsection{Mapping Function}
+The function $f(\phi)$ is defined as $f(\phi) \equiv \left( \frac{r'}{r_0'} \right)^2 = \left( \frac{r'/y}{r_0'/y} \right)^2$ and is found by solving for $r'$ given $\phi, r_0', y$, and constants using the following expression
+\begin{equation}
+\left(\tan^2 \theta_V + 2\frac{r'}{y}\tan \theta_V \cos \phi + \left(\frac{r'}{y}\right)^2\right)2^{-\frac{\theta'}{\sigma}^{2\kappa}} = \left(\tan \theta_V + \frac{r_0'}{y}\right)^22^{-\frac{\theta_0'}{\sigma}^{2\kappa}},
+\end{equation}
+where
+\begin{align}
+\theta' &\approx \frac{\frac{r'}{y}\left( \cos^2 \theta_V - \frac{1}{4}\sin^2 (2\theta_V) \cos^2 \phi  \right)^{1/2}}{1 + \frac{1}{2}\frac{r'}{y}\sin (2\theta_V) \cos \phi} \\
+\theta_0' &\approx \frac{\frac{r_0'}{y} \cos^2\theta_V}{1 + \frac{r_0'}{y}\sin \theta_V \cos \theta_V}.
+\end{align}
+At $\phi = 0$, $f(\phi) = 1$ because $r' = r_0'$ by definition. As we iterate in $\phi$ during our innermost integration, we solve for $r'$, using the value from the previous integration step as a guess for the current value in a root-solving methodology.
+
+\end{document}
