@@ -8,8 +8,6 @@
 #include <iostream>
 #include <cmath>
 
-// EXPORT double ScipyCallableTest(double x);
-
 struct params {
     const double THV;
     const double KAP;
@@ -30,9 +28,6 @@ public:
   double IntensityG(double y, double chi);
   int IntegrandG(double *vals, double r0, const double y);
   double R0Max(double y, double g, double xacc);
-  // double IntG(int n, double *x, void *user_data);
-  // double RootFuncR0(double r0, const double y);
-  // double RootJacR0(double r0, const double y);
   double FluxG(double r0, const double y);
   const double thv, kap, sig, k, p, ga, gk, bg, tan_thv;
 

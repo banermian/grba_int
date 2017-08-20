@@ -109,12 +109,6 @@ EXPORT double PhiIntegrate(const double r0, const double thv, const double kap, 
   double sum = SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
   return sum;
 }
-// 
-// EXPORT double PhiIntegrate(double r0, params& p) {
-//   RootFuncPhi rfunc(r0, p);
-//   double sum = SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
-//   return sum;
-// }
 
 // double f(double x, void *p) {
 //   params &ps = *reinterpret_cast<params *>(p);
