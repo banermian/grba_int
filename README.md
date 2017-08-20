@@ -1,1 +1,2 @@
-# grba_int
+# Gamma-ray Burst Afterglow Brightness Profiles
+-----
