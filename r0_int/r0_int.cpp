@@ -4,21 +4,6 @@ RootFuncR0::RootFuncR0(const double Y, const double THV, const double KAP, const
 
 RootFuncR0::RootFuncR0(const double Y, params& p) : GrbaIntegrator(p), y(Y) {}
 
-// double RootFuncR0::F(double r0) {
-//   double eng0 = EnergyProfile(0.0, r0 / y);
-//   double lhs = (r0 / y + tan_thv)*(r0 / y + tan_thv)*eng0;
-//   double rhs = (y - pow(y, 5.0 - k)) / (gk*y*y);
-//   return lhs - rhs;
-// }
-//
-// double RootFuncR0::DF(double r0) {
-//   double thp0 = ThetaPrime(0.0, r0 / y);
-//   double frac = kap*log(2.0)*pow(thp0 / sig, 2.0*kap)*((r0 / y + tan_thv) / (r0 / y * (1.0 + (r0 / y)*sin(thv)*cos_thv)));
-//   double exponent = 2.0*EnergyProfile(0.0, r0 / y);
-//   return (1.0 - frac)*exponent;
-// }
-
-// Test switching from r0 / y to r0, y
 double RootFuncR0::F(double r0) {
   double eng0 = EnergyProfile(0.0, r0 / y);
   double lhs = gk*eng0*(r0 + y*tan_thv)*(r0 + y*tan_thv);
