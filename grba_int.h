@@ -8,6 +8,8 @@
 #include <iostream>
 #include <cmath>
 
+static const double TORAD = M_PI / 180.0;
+
 struct params {
     const double THV;
     const double KAP;
@@ -34,6 +36,8 @@ public:
 protected:
   const double tan_thv_sq, sin_2thv, cos_thv, sin_thv, chi_exp, y_exp;
 };
+
+double IntegrandG(double x, void *int_params);
 
 class IntG : public GrbaIntegrator
 {

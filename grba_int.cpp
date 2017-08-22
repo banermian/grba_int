@@ -32,6 +32,9 @@ double GrbaIntegrator::IntensityG(double y, double chi) {
 }
 
 int GrbaIntegrator::IntegrandG(double *vals, double r0, const double y) {
+  // const double thp0 = ThetaPrime(0.0, r0 / y);
+  // const double exp0 = pow(thp0 / sig, 2.0*kap);
+  // double chi = (y - gk*exp2(-exp0)*(y*tan_thv + r0)*(y*tan_thv + r0)) / (pow(y, 5.0 - k));
   double chi = Chi(r0, y);
   RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
   vals[0] = pow(y, y_exp);
@@ -52,6 +55,11 @@ double GrbaIntegrator::R0Max(double y, double g, double xacc) {
   RootFuncR0 rfunc(y, thv, kap, sig, k, p, ga);
   double root = RootR0(rfunc, g, xacc);
   return root;
+}
+
+double IntegrandG(double x, void *int_params) {
+  struct params * p = (struct params *)int_params;
+  GrbaIntegrator grb(p->THV*TORAD, p->KAP, p->SIG, p->K, p->P, p->GA);
 }
 
 IntG::IntG(double R0, const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : GrbaIntegrator(THV, KAP, SIG, K, P, GA), chi(0.0), r0(R0), y(Y), thp0(ThetaPrime(0.0, R0/Y)) {

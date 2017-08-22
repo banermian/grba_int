@@ -1,9 +1,11 @@
 #include "r0_int.h"
+#include<gsl/gsl_integation.h>
 
 RootFuncR0::RootFuncR0(const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : GrbaIntegrator(THV, KAP, SIG, K, P, GA), y(Y) {}
 
 RootFuncR0::RootFuncR0(const double Y, params& p) : GrbaIntegrator(p), y(Y) {}
 
+// Test switching from r0 / y to r0, y
 double RootFuncR0::F(double r0) {
   double eng0 = EnergyProfile(0.0, r0 / y);
   double lhs = gk*eng0*(r0 + y*tan_thv)*(r0 + y*tan_thv);
@@ -55,4 +57,4 @@ double RootR0(RootFuncR0& func, double g, const double xacc) {
     info = __cminpack_func__(hybrj1)(fcnR0, p, n, x, fvec, fjac, ldfjac, tol, wa, lwa);
 
     return (double)x[0];
-};
+}
