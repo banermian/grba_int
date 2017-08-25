@@ -2,7 +2,7 @@
 #include "phi_int/phi_int.h"
 #include "r0_int/r0_int.h"
 
-const double TORAD = M_PI / 180.0;
+// const double TORAD = M_PI / 180.0;
 
 int main() {
   double R0, Y, THV, KAP;
@@ -35,5 +35,8 @@ int main() {
   std::cout << "RootFuncR0.DF(R0MAX) = " << r0func.DF(R0MAX) << std::endl;
   grb.IntegrandG(int_vals, R0MAX-R0, Y);
   std::cout << "Integrand(R0MAX) = " << int_vals[4] << std::endl;
+
+  double r0_val = Integrate(0.1, grb);
+  std::cout << "Integral R0 = " << r0_val << std::endl;
   return 0;
 }

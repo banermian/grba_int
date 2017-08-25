@@ -1,6 +1,7 @@
 #include "grba_int.h"
 #include "./phi_int/phi_int.h"
 #include "./r0_int/r0_int.h"
+#include <gsl/gsl_integration.h>
 
 GrbaIntegrator::GrbaIntegrator(const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : thv(THV), kap(KAP), sig(SIG), k(K), p(P), ga(GA), gk((4.0 - k)*ga*ga), bg((1.0 - p) / 2.0), tan_thv(tan(thv)), tan_thv_sq(tan(thv)*tan(thv)), sin_2thv(sin(2.0*thv)), cos_thv(cos(thv)), sin_thv(sin(thv)), chi_exp((7.0*k - 23.0 + bg*(13.0 + k)) / (6.0*(4.0 - k))), y_exp(0.5*(bg*(4.0 - k) + 4.0 - 3.0*k)) {}
 
@@ -57,10 +58,48 @@ double GrbaIntegrator::R0Max(double y, double g, double xacc) {
   return root;
 }
 
-double IntegrandG(double x, void *int_params) {
-  struct params * p = (struct params *)int_params;
-  GrbaIntegrator grb(p->THV*TORAD, p->KAP, p->SIG, p->K, p->P, p->GA);
+double Integrand(double x, void *int_params) {
+  struct intparams * p = (struct intparams *)int_params;
+  const double y = p->Y;
+  const double thv = p->THV;
+  const double kap = p->KAP;
+  const double sig = p->SIG;
+  const double k = p->K;
+  const double pp = p->P;
+  const double ga = p->GA;
+  GrbaIntegrator grb(thv*TORAD, kap, sig, k, pp, ga);
+  return grb.FluxG(x, y);
 }
+
+double Integrate(const double y,  GrbaIntegrator& grb) {
+  gsl_integration_workspace * w
+  = gsl_integration_workspace_alloc (100);
+
+double result, error;
+double min = 1.0e-9;
+double max = grb.R0Max(y, 0.21, 1.0e-7);
+struct intparams IP = { y, grb.thv, grb.kap, grb.sig, grb.k, grb.p, grb.ga };
+// IP.Y = y;
+// IP.THV = grb.thv;
+// IP.KAP = grb.kap;
+// IP.SIG = grb.sig;
+// IP.K = grb.k;
+// IP.P = grb.p;
+// IP.GA = grb.ga;
+
+gsl_function F;
+F.function = &Integrand;
+F.params = &IP;
+
+gsl_integration_qags (&F, min, max, 0, 1e-7, 100, w, &result, &error);
+
+return result;
+}
+
+// double IntegrandG(double x, void *int_params) {
+//   struct params * p = (struct params *)int_params;
+//   GrbaIntegrator grb(p->THV*TORAD, p->KAP, p->SIG, p->K, p->P, p->GA);
+// }
 
 IntG::IntG(double R0, const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : GrbaIntegrator(THV, KAP, SIG, K, P, GA), chi(0.0), r0(R0), y(Y), thp0(ThetaPrime(0.0, R0/Y)) {
   SetChi();

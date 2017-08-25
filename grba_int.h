@@ -37,7 +37,17 @@ protected:
   const double tan_thv_sq, sin_2thv, cos_thv, sin_thv, chi_exp, y_exp;
 };
 
-double IntegrandG(double x, void *int_params);
+struct intparams {
+  const double Y;
+  const double THV;
+  const double KAP;
+  const double SIG;
+  const double K;
+  const double P;
+  const double GA;
+};
+double Integrand(double x, void *int_params);
+double Integrate(const double y,  GrbaIntegrator& grb);
 
 class IntG : public GrbaIntegrator
 {

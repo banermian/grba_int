@@ -7,7 +7,7 @@ compile_args = ['-Wall', '-O3']
 
 ext_mod = Extension('py_grba_int',
                        sources=['py_grba_int.pyx', 'grba_int.cpp', './phi_int/phi_int.cpp', './r0_int/r0_int.cpp'],
-                       libraries=['cminpack'],
+                       libraries=['cminpack', 'gsl_integration'],
                        extra_compile_args=compile_args,
                        language="c++")
 

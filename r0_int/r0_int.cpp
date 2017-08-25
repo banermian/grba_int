@@ -1,5 +1,4 @@
 #include "r0_int.h"
-#include<gsl/gsl_integation.h>
 
 RootFuncR0::RootFuncR0(const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : GrbaIntegrator(THV, KAP, SIG, K, P, GA), y(Y) {}
 

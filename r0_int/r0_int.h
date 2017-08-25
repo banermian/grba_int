@@ -14,6 +14,7 @@ public:
   RootFuncR0(const double Y, params& p);
   double F(double r0);
   double DF(double r0);
+
   const double y;
 };
 
