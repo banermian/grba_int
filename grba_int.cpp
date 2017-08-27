@@ -25,17 +25,33 @@ double GrbaIntegrator::Chi(double r0, double y) {
   return chi;
 }
 
-double GrbaIntegrator::IntensityG(double y, double chi) {
-  double ys = pow(y, y_exp);
-  double chis = pow(chi, chi_exp);
-  double fac = pow((7.0 - 2.0*k)*chi*pow(y, 4.0 - k) + 1.0, bg - 2.0);
-  return ys*chis*fac;
+double GrbaIntegrator::IntegrandY(double y) {
+  return pow(y, y_exp);
+}
+
+double GrbaIntegrator::IntegrandChi(double r0, double y) {
+  double chi = Chi(r0, y);
+  return pow(chi, chi_exp);
+}
+
+double GrbaIntegrator::IntegrandChi(double chi) {
+  return pow(chi, chi_exp);
+}
+
+double GrbaIntegrator::IntegrandFac(double r0, double y) {
+  double chi = Chi(r0, y);
+  return pow((7.0 - 2.0*k)*chi*pow(y, 4.0 - k) + 1.0, bg - 2.0);
+}
+
+double GrbaIntegrator::IntegrandPhi(double r0, double y) {
+  RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
+  return SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
+}
+double GrbaIntegrator::Integrand(double r0, double y) {
+  return r0*IntegrandY(y)*IntegrandChi(r0, y)*IntegrandFac(r0, y)*IntegrandPhi(r0, y);
 }
 
 int GrbaIntegrator::IntegrandG(double *vals, double r0, const double y) {
-  // const double thp0 = ThetaPrime(0.0, r0 / y);
-  // const double exp0 = pow(thp0 / sig, 2.0*kap);
-  // double chi = (y - gk*exp2(-exp0)*(y*tan_thv + r0)*(y*tan_thv + r0)) / (pow(y, 5.0 - k));
   double chi = Chi(r0, y);
   RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
   vals[0] = pow(y, y_exp);
@@ -72,26 +88,24 @@ double Integrand(double x, void *int_params) {
 }
 
 double Integrate(const double y,  GrbaIntegrator& grb) {
+  double result, error;
+  double min = 1.0e-9;
+  double max = grb.R0Max(y, 0.21, 1.0e-7);
+  double chi_max = grb.Chi(max, y);
+  if ((chi_max > 10.0) || (chi_max < 0.0)) {
+    return 0.0;
+  }
+
+  struct intparams IP = { y, grb.thv, grb.kap, grb.sig, grb.k, grb.p, grb.ga };
+
   gsl_integration_workspace * w
   = gsl_integration_workspace_alloc (100);
 
-double result, error;
-double min = 1.0e-9;
-double max = grb.R0Max(y, 0.21, 1.0e-7);
-struct intparams IP = { y, grb.thv, grb.kap, grb.sig, grb.k, grb.p, grb.ga };
-// IP.Y = y;
-// IP.THV = grb.thv;
-// IP.KAP = grb.kap;
-// IP.SIG = grb.sig;
-// IP.K = grb.k;
-// IP.P = grb.p;
-// IP.GA = grb.ga;
+  gsl_function F;
+  F.function = &Integrand;
+  F.params = &IP;
 
-gsl_function F;
-F.function = &Integrand;
-F.params = &IP;
-
-gsl_integration_qags (&F, min, max, 0, 1e-7, 100, w, &result, &error);
+  gsl_integration_qags (&F, min, max, 0, 1e-7, 100, w, &result, &error);
 
 return result;
 }
@@ -101,12 +115,12 @@ return result;
 //   GrbaIntegrator grb(p->THV*TORAD, p->KAP, p->SIG, p->K, p->P, p->GA);
 // }
 
-IntG::IntG(double R0, const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : GrbaIntegrator(THV, KAP, SIG, K, P, GA), chi(0.0), r0(R0), y(Y), thp0(ThetaPrime(0.0, R0/Y)) {
-  SetChi();
+IntG::IntG(const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : GrbaIntegrator(THV, KAP, SIG, K, P, GA), chi(0.0), y(Y), thp0(ThetaPrime(0.0, 0.0/Y)) {
+  SetChi(0.0);
 }
 
-IntG::IntG(double R0, const double Y, params& p) : GrbaIntegrator(p), chi(0.0), r0(R0), y(Y), thp0(ThetaPrime(0.0, R0/Y)) {
-  SetChi();
+IntG::IntG(const double Y, params& p) : GrbaIntegrator(p), chi(0.0), y(Y), thp0(ThetaPrime(0.0, 0.0/Y)) {
+  SetChi(0.0);
 }
 
 double IntG::IntegrandY() {
@@ -121,12 +135,17 @@ double IntG::IntegrandFac() {
   return pow((7.0 - 2.0*k)*chi*pow(y, 4.0 - k) + 1.0, bg - 2.0);
 }
 
-double IntG::Integrand() {
+double IntG::IntegrandPhi(double r0) {
   RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
-  return r0*IntegrandY()*IntegrandChi()*IntegrandFac()*SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
+  return SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
 }
 
-void IntG::SetChi() {
+double IntG::Integrand(double r0) {
+  SetChi(r0);
+  return r0*IntegrandY()*IntegrandChi()*IntegrandFac()*IntegrandPhi(r0);
+}
+
+void IntG::SetChi(double r0) {
   // chi = (y - gk*exp2(-exp0)*(y*tan_thv + r0)*(y*tan_thv + r0)) / (pow(y, 5.0 - k));
   chi = Chi(r0, y);
 }

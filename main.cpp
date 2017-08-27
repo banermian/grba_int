@@ -10,21 +10,29 @@ int main() {
   std::cin >> Y >> THV >> KAP;
   std::cout << "Enter R0" << std::endl;
   std::cin >> R0;
-  IntG intG(R0, Y, THV*TORAD, KAP, 2.0, 0.0, 2.2, 1.0);
+  IntG intG(Y, THV*TORAD, KAP, 2.0, 0.0, 2.2, 1.0);
+  intG.SetChi(R0);
   std::cout << "chi = " << intG.chi << std::endl;
   std::cout << "IntY = " << intG.IntegrandY() << std::endl;
   std::cout << "IntChi = " << intG.IntegrandChi() << std::endl;
   std::cout << "IntFac = " << intG.IntegrandFac() << std::endl;
-  std::cout << "Integrand = " << intG.Integrand() << std::endl;
+  std::cout << "IntPhi = " << intG.IntegrandPhi(R0) << std:: endl;
+  std::cout << "Integrand = " << intG.Integrand(R0) << std::endl;
 
   GrbaIntegrator grb(THV*TORAD, KAP, 2.0, 0.0, 2.2, 1.0);
   double int_vals[4];
   grb.IntegrandG(int_vals, R0, Y);
-  std::cout << "IntY = " << int_vals[0] << std::endl;
-  std::cout << "IntChi = " << int_vals[1] << std::endl;
-  std::cout << "IntFac = " << int_vals[2] << std::endl;
-  std::cout << "IntegrandPhi = " << int_vals[3] << std::endl;
-  std::cout << "Integrand = " << int_vals[4] << std::endl;
+  std::cout << "chi = " << grb.Chi(R0, Y) << std::endl;
+  // std::cout << "IntY = " << int_vals[0] << std::endl;
+  // std::cout << "IntChi = " << int_vals[1] << std::endl;
+  // std::cout << "IntFac = " << int_vals[2] << std::endl;
+  // std::cout << "IntegrandPhi = " << int_vals[3] << std::endl;
+  // std::cout << "Integrand = " << int_vals[4] << std::endl;
+  std::cout << "IntY = " << grb.IntegrandY(Y) << std::endl;
+  std::cout << "IntChi = " << grb.IntegrandChi(R0, Y) << std::endl;
+  std::cout << "IntFac = " << grb.IntegrandFac(R0, Y) << std::endl;
+  std::cout << "IntegrandPhi = " << grb.IntegrandPhi(R0, Y) << std::endl;
+  std::cout << "Integrand = " << grb.Integrand(R0, Y) << std::endl;
 
   RootFuncR0 r0func(Y, THV*TORAD, KAP, 2.0, 0.0, 2.2, 1.0);
   // double R0MAX = RootR0(r0func, 0.21, 1.0e-7);

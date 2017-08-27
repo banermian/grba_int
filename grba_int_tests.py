@@ -10,7 +10,7 @@ import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 from pprint import pprint
 print "test"
-from py_grba_int import GrbaInt
+from py_grba_int import GrbaInt, IG
 print "test"
 # THV = 0.0
 # KAP = 0.0
@@ -19,6 +19,57 @@ K = 0.0
 P = 2.2
 GA = 1.0
 R0MIN = 1.0e-9
+
+def chi_func(thv, kap, r0=0.0, y=0.0):
+    grb = GrbaInt(thv, kap, SIG, K, P, GA)
+    c = np.vectorize(grb.chi)
+    return c(r0, y)
+
+def plot_chi_test(scaling = 'log'):
+    pdf_list = []
+    r0_vals = np.linspace(-0.75, 0.75)
+    for y_val in [0.001, 0.1, 0.3, 0.5, 0.8, 0.9, 0.999]:
+        pdf = plot_grid(chi_func, 'Chi', r0=r0_vals, y=y_val)
+        # print pdf.describe()
+        # sys.exit(0)
+        pdf_list.append(pdf)
+
+    plot_df = pd.concat(pdf_list, ignore_index=True)
+    grid = sns.FacetGrid(
+        plot_df,
+        hue='y', col='KAP', row='THV',
+        palette='Paired'
+    )
+    grid = grid.map(plt.plot, 'r0', 'Chi', ls='solid', lw=1.5)
+    # grid = grid.map(plt.plot, 'r0', 'Chi_jac', ls='dashed', lw=1.5)
+    for ax in grid.axes.flat:
+        ax.set_yscale(scaling)
+        # ax.set_ylim(0.0, 2.0)
+        ax.set_xlim(min(r0_vals), max(r0_vals))
+        ax.axhline(y=1.0, ls='dashed', c='black', lw=1)
+
+    grid.set_titles(r"$\kappa = {col_name}$ | $\theta_V = {row_name}$")
+    grid.set_axis_labels(r"$r_0'$", r"$\chi$")
+    handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
+    lgd = plt.legend(
+        handles, labels,
+        ncol=7, labelspacing=0.,
+        title=r"$y$",
+        loc = 'upper right', bbox_to_anchor=[0.15, -0.2],
+        fancybox=True, framealpha=0.5
+    )
+    plt.savefig(
+        "./plots/chi-r0'_ext_{}.pdf".format(scaling),
+        dpi=900,
+        bbox_extra_artists=(lgd,),
+        bbox_inches='tight'
+        )
+
+def ig_func(thv, kap, r0=0.0, y=0.0):
+    ig = IG()
+    grb = GrbaInt(thv, kap, SIG, K, P, GA)
+    c = np.vectorize(grb.chi)
+    return c(r0, y)
 
 def plot_chi_test():
     pdf_list = []
@@ -61,12 +112,7 @@ def plot_chi_test():
         bbox_inches='tight'
         )
 
-def chi_func(thv, kap, r0=0.0, y=0.0):
-    grb = GrbaInt(thv, kap, SIG, K, P, GA)
-    c = np.vectorize(grb.chi)
-    return c(r0, y)
-
-def plot_grid(f, f_name='', *args, **kwargs):
+def plot_grid(f, f_name='', jac=False, *args, **kwargs):
     df_list = []
     for thv in [0.0, 0.5, 1.0, 3.0]:
         for kap in [0.0, 1.0, 3.0, 10.0]:
@@ -74,7 +120,6 @@ def plot_grid(f, f_name='', *args, **kwargs):
             THETA_V = np.radians(thv*SIG)
             KAP = kap
             func_array = f(THETA_V, KAP, *args, **kwargs)
-            jac_array = np.gradient(func_array)
             kap_array = np.repeat(KAP, len(func_array))
             thv_array = np.repeat(thv*SIG, len(func_array))
             data["THV"] = thv_array
@@ -86,7 +131,11 @@ def plot_grid(f, f_name='', *args, **kwargs):
                     data.append(np.repeat(a, len(func_array)))
 
             data[f_name] = func_array
-            data["{}_jac".format(f_name)] = jac_array
+
+            if jac:
+                jac_array = np.gradient(func_array)
+                data["{}_jac".format(f_name)] = jac_array
+                
             for k, v in six.iteritems(kwargs):
                 if isinstance(v, np.ndarray):
                     data[k] = np.array(v)

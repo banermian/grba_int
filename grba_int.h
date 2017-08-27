@@ -27,7 +27,12 @@ public:
   double ThetaPrime(double phi, double r);
   double EnergyProfile(double phi, double r);
   double Chi(double r0, double y);
-  double IntensityG(double y, double chi);
+  double IntegrandY(double y);
+  double IntegrandChi(double r0, double y);
+  double IntegrandChi(double chi);
+  double IntegrandFac(double r0, double y);
+  double IntegrandPhi(double r0, double y);
+  double Integrand(double r0, double y);
   int IntegrandG(double *vals, double r0, const double y);
   double R0Max(double y, double g, double xacc);
   double FluxG(double r0, const double y);
@@ -52,17 +57,18 @@ double Integrate(const double y,  GrbaIntegrator& grb);
 class IntG : public GrbaIntegrator
 {
 public:
-  IntG(double R0, const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA);
-  IntG(double R0, const double Y, params& p);
+  IntG(const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA);
+  IntG(const double Y, params& p);
   double IntegrandY();
   double IntegrandChi();
   double IntegrandFac();
-  double Integrand();
+  double IntegrandPhi(double r0);
+  double Integrand(double r0);
   double chi;
+  void SetChi(double r0);
 
 private:
-  void SetChi();
-  double r0, y, thp0;
+  double y, thp0;
 };
 
 #endif
