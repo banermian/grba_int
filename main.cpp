@@ -10,14 +10,6 @@ int main() {
   std::cin >> Y >> THV >> KAP;
   std::cout << "Enter R0" << std::endl;
   std::cin >> R0;
-  IntG intG(Y, THV*TORAD, KAP, 2.0, 0.0, 2.2, 1.0);
-  intG.SetChi(R0);
-  std::cout << "chi = " << intG.chi << std::endl;
-  std::cout << "IntY = " << intG.IntegrandY() << std::endl;
-  std::cout << "IntChi = " << intG.IntegrandChi() << std::endl;
-  std::cout << "IntFac = " << intG.IntegrandFac() << std::endl;
-  std::cout << "IntPhi = " << intG.IntegrandPhi(R0) << std:: endl;
-  std::cout << "Integrand = " << intG.Integrand(R0) << std::endl;
 
   GrbaIntegrator grb(THV*TORAD, KAP, 2.0, 0.0, 2.2, 1.0);
   double int_vals[4];

@@ -54,21 +54,4 @@ struct intparams {
 double Integrand(double x, void *int_params);
 double Integrate(const double y,  GrbaIntegrator& grb);
 
-class IntG : public GrbaIntegrator
-{
-public:
-  IntG(const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA);
-  IntG(const double Y, params& p);
-  double IntegrandY();
-  double IntegrandChi();
-  double IntegrandFac();
-  double IntegrandPhi(double r0);
-  double Integrand(double r0);
-  double chi;
-  void SetChi(double r0);
-
-private:
-  double y, thp0;
-};
-
 #endif
