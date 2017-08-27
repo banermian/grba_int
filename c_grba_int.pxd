@@ -24,17 +24,6 @@ cdef extern from "grba_int.h":
         double FluxG(double r0, const double y)
         const double thv, kap, sig, k, p, ga, gk, bg, tan_thv
 
-#    cdef cppclass IntG:
-#        IntG(double R0, double Y, double THV, double KAP, double SIG, double K, double P, double GA)
-#        IntG(double R0, double Y, params& p)
-#        double IntegrandY()
-#        double IntegrandChi()
-#        double IntegrandFac()
-#        double Integrand(double r0)
-#        double IntegrandPhi(double r0)
-#        double chi
-#        double thv, kap, sig, k, p, ga
-
 cdef extern from "r0_int/r0_int.h":
     cdef cppclass RootFuncR0:
         RootFuncR0(double Y, double THV, double KAP, double SIG, double K, double P, double GA)
