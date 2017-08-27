@@ -1039,8 +1039,8 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "py_grba_int.pyx":41
- * #        print self.c_intg.thv, self.c_intg.kap, self.c_intg.sig, self.c_intg.k, self.c_intg.p, self.c_intg.ga
+/* "py_grba_int.pyx":6
+ * from c_grba_int cimport GrbaIntegrator, PhiIntegrate
  * 
  * cdef class GrbaInt:             # <<<<<<<<<<<<<<
  *     cdef GrbaIntegrator* c_grb
@@ -1595,7 +1595,7 @@ static PyObject *__pyx_tuple__9;
 static PyObject *__pyx_tuple__10;
 static PyObject *__pyx_tuple__11;
 
-/* "py_grba_int.pyx":44
+/* "py_grba_int.pyx":9
  *     cdef GrbaIntegrator* c_grb
  * 
  *     def __cinit__(self, double thv, double kap, double sig, double k, double p, double ga):             # <<<<<<<<<<<<<<
@@ -1646,35 +1646,35 @@ static int __pyx_pw_11py_grba_int_7GrbaInt_1__cinit__(PyObject *__pyx_v_self, Py
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_kap)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 1); __PYX_ERR(1, 44, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 1); __PYX_ERR(1, 9, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_sig)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 2); __PYX_ERR(1, 44, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 2); __PYX_ERR(1, 9, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_k)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 3); __PYX_ERR(1, 44, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 3); __PYX_ERR(1, 9, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_p)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 4); __PYX_ERR(1, 44, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 4); __PYX_ERR(1, 9, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_ga)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 5); __PYX_ERR(1, 44, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 5); __PYX_ERR(1, 9, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 44, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 9, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
@@ -1686,16 +1686,16 @@ static int __pyx_pw_11py_grba_int_7GrbaInt_1__cinit__(PyObject *__pyx_v_self, Py
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
       values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
     }
-    __pyx_v_thv = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_thv == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L3_error)
-    __pyx_v_kap = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_kap == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L3_error)
-    __pyx_v_sig = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_sig == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L3_error)
-    __pyx_v_k = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_k == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L3_error)
-    __pyx_v_p = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_p == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L3_error)
-    __pyx_v_ga = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_ga == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L3_error)
+    __pyx_v_thv = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_thv == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 9, __pyx_L3_error)
+    __pyx_v_kap = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_kap == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 9, __pyx_L3_error)
+    __pyx_v_sig = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_sig == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 9, __pyx_L3_error)
+    __pyx_v_k = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_k == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 9, __pyx_L3_error)
+    __pyx_v_p = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_p == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 9, __pyx_L3_error)
+    __pyx_v_ga = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_ga == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 9, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 44, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 9, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1713,7 +1713,7 @@ static int __pyx_pf_11py_grba_int_7GrbaInt___cinit__(struct __pyx_obj_11py_grba_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "py_grba_int.pyx":45
+  /* "py_grba_int.pyx":10
  * 
  *     def __cinit__(self, double thv, double kap, double sig, double k, double p, double ga):
  *         self.c_grb = new GrbaIntegrator(thv, kap, sig, k, p, ga)             # <<<<<<<<<<<<<<
@@ -1722,7 +1722,7 @@ static int __pyx_pf_11py_grba_int_7GrbaInt___cinit__(struct __pyx_obj_11py_grba_
  */
   __pyx_v_self->c_grb = new GrbaIntegrator(__pyx_v_thv, __pyx_v_kap, __pyx_v_sig, __pyx_v_k, __pyx_v_p, __pyx_v_ga);
 
-  /* "py_grba_int.pyx":44
+  /* "py_grba_int.pyx":9
  *     cdef GrbaIntegrator* c_grb
  * 
  *     def __cinit__(self, double thv, double kap, double sig, double k, double p, double ga):             # <<<<<<<<<<<<<<
@@ -1736,7 +1736,7 @@ static int __pyx_pf_11py_grba_int_7GrbaInt___cinit__(struct __pyx_obj_11py_grba_
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":47
+/* "py_grba_int.pyx":12
  *         self.c_grb = new GrbaIntegrator(thv, kap, sig, k, p, ga)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -1759,7 +1759,7 @@ static void __pyx_pf_11py_grba_int_7GrbaInt_2__dealloc__(struct __pyx_obj_11py_g
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "py_grba_int.pyx":48
+  /* "py_grba_int.pyx":13
  * 
  *     def __dealloc__(self):
  *         del self.c_grb             # <<<<<<<<<<<<<<
@@ -1768,7 +1768,7 @@ static void __pyx_pf_11py_grba_int_7GrbaInt_2__dealloc__(struct __pyx_obj_11py_g
  */
   delete __pyx_v_self->c_grb;
 
-  /* "py_grba_int.pyx":47
+  /* "py_grba_int.pyx":12
  *         self.c_grb = new GrbaIntegrator(thv, kap, sig, k, p, ga)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -1780,7 +1780,7 @@ static void __pyx_pf_11py_grba_int_7GrbaInt_2__dealloc__(struct __pyx_obj_11py_g
   __Pyx_RefNannyFinishContext();
 }
 
-/* "py_grba_int.pyx":50
+/* "py_grba_int.pyx":15
  *         del self.c_grb
  * 
  *     def THV(self):             # <<<<<<<<<<<<<<
@@ -1807,7 +1807,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_4THV(struct __pyx_obj_11py_grba
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("THV", 0);
 
-  /* "py_grba_int.pyx":51
+  /* "py_grba_int.pyx":16
  * 
  *     def THV(self):
  *         return self.c_grb.thv             # <<<<<<<<<<<<<<
@@ -1815,13 +1815,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_4THV(struct __pyx_obj_11py_grba
  *     def KAP(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->thv); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 51, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->thv); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":50
+  /* "py_grba_int.pyx":15
  *         del self.c_grb
  * 
  *     def THV(self):             # <<<<<<<<<<<<<<
@@ -1840,7 +1840,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_4THV(struct __pyx_obj_11py_grba
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":53
+/* "py_grba_int.pyx":18
  *         return self.c_grb.thv
  * 
  *     def KAP(self):             # <<<<<<<<<<<<<<
@@ -1867,7 +1867,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_6KAP(struct __pyx_obj_11py_grba
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("KAP", 0);
 
-  /* "py_grba_int.pyx":54
+  /* "py_grba_int.pyx":19
  * 
  *     def KAP(self):
  *         return self.c_grb.kap             # <<<<<<<<<<<<<<
@@ -1875,13 +1875,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_6KAP(struct __pyx_obj_11py_grba
  *     def SIG(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->kap); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 54, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->kap); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":53
+  /* "py_grba_int.pyx":18
  *         return self.c_grb.thv
  * 
  *     def KAP(self):             # <<<<<<<<<<<<<<
@@ -1900,7 +1900,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_6KAP(struct __pyx_obj_11py_grba
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":56
+/* "py_grba_int.pyx":21
  *         return self.c_grb.kap
  * 
  *     def SIG(self):             # <<<<<<<<<<<<<<
@@ -1927,7 +1927,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_8SIG(struct __pyx_obj_11py_grba
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("SIG", 0);
 
-  /* "py_grba_int.pyx":57
+  /* "py_grba_int.pyx":22
  * 
  *     def SIG(self):
  *         return self.c_grb.sig             # <<<<<<<<<<<<<<
@@ -1935,13 +1935,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_8SIG(struct __pyx_obj_11py_grba
  *     def K(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->sig); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 57, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->sig); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":56
+  /* "py_grba_int.pyx":21
  *         return self.c_grb.kap
  * 
  *     def SIG(self):             # <<<<<<<<<<<<<<
@@ -1960,7 +1960,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_8SIG(struct __pyx_obj_11py_grba
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":59
+/* "py_grba_int.pyx":24
  *         return self.c_grb.sig
  * 
  *     def K(self):             # <<<<<<<<<<<<<<
@@ -1987,7 +1987,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_10K(struct __pyx_obj_11py_grba_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("K", 0);
 
-  /* "py_grba_int.pyx":60
+  /* "py_grba_int.pyx":25
  * 
  *     def K(self):
  *         return self.c_grb.k             # <<<<<<<<<<<<<<
@@ -1995,13 +1995,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_10K(struct __pyx_obj_11py_grba_
  *     def P(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->k); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 60, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->k); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":59
+  /* "py_grba_int.pyx":24
  *         return self.c_grb.sig
  * 
  *     def K(self):             # <<<<<<<<<<<<<<
@@ -2020,7 +2020,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_10K(struct __pyx_obj_11py_grba_
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":62
+/* "py_grba_int.pyx":27
  *         return self.c_grb.k
  * 
  *     def P(self):             # <<<<<<<<<<<<<<
@@ -2047,7 +2047,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_12P(struct __pyx_obj_11py_grba_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("P", 0);
 
-  /* "py_grba_int.pyx":63
+  /* "py_grba_int.pyx":28
  * 
  *     def P(self):
  *         return self.c_grb.p             # <<<<<<<<<<<<<<
@@ -2055,13 +2055,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_12P(struct __pyx_obj_11py_grba_
  *     def GA(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->p); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 63, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->p); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":62
+  /* "py_grba_int.pyx":27
  *         return self.c_grb.k
  * 
  *     def P(self):             # <<<<<<<<<<<<<<
@@ -2080,7 +2080,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_12P(struct __pyx_obj_11py_grba_
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":65
+/* "py_grba_int.pyx":30
  *         return self.c_grb.p
  * 
  *     def GA(self):             # <<<<<<<<<<<<<<
@@ -2107,7 +2107,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_14GA(struct __pyx_obj_11py_grba
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("GA", 0);
 
-  /* "py_grba_int.pyx":66
+  /* "py_grba_int.pyx":31
  * 
  *     def GA(self):
  *         return self.c_grb.ga             # <<<<<<<<<<<<<<
@@ -2115,13 +2115,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_14GA(struct __pyx_obj_11py_grba
  *     def theta_prime(self, double phi, double r):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->ga); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 66, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->ga); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 31, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":65
+  /* "py_grba_int.pyx":30
  *         return self.c_grb.p
  * 
  *     def GA(self):             # <<<<<<<<<<<<<<
@@ -2140,7 +2140,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_14GA(struct __pyx_obj_11py_grba
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":68
+/* "py_grba_int.pyx":33
  *         return self.c_grb.ga
  * 
  *     def theta_prime(self, double phi, double r):             # <<<<<<<<<<<<<<
@@ -2179,11 +2179,11 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_17theta_prime(PyObject *__pyx_v
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_r)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("theta_prime", 1, 2, 2, 1); __PYX_ERR(1, 68, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("theta_prime", 1, 2, 2, 1); __PYX_ERR(1, 33, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "theta_prime") < 0)) __PYX_ERR(1, 68, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "theta_prime") < 0)) __PYX_ERR(1, 33, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2191,12 +2191,12 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_17theta_prime(PyObject *__pyx_v
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_phi = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_phi == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 68, __pyx_L3_error)
-    __pyx_v_r = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_r == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 68, __pyx_L3_error)
+    __pyx_v_phi = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_phi == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 33, __pyx_L3_error)
+    __pyx_v_r = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_r == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 33, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("theta_prime", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 68, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("theta_prime", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 33, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.theta_prime", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2215,7 +2215,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_16theta_prime(struct __pyx_obj_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("theta_prime", 0);
 
-  /* "py_grba_int.pyx":69
+  /* "py_grba_int.pyx":34
  * 
  *     def theta_prime(self, double phi, double r):
  *         return self.c_grb.ThetaPrime(phi, r)             # <<<<<<<<<<<<<<
@@ -2223,13 +2223,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_16theta_prime(struct __pyx_obj_
  *     def energy_profile(self, double phi, double r):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->ThetaPrime(__pyx_v_phi, __pyx_v_r)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 69, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->ThetaPrime(__pyx_v_phi, __pyx_v_r)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":68
+  /* "py_grba_int.pyx":33
  *         return self.c_grb.ga
  * 
  *     def theta_prime(self, double phi, double r):             # <<<<<<<<<<<<<<
@@ -2248,7 +2248,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_16theta_prime(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":71
+/* "py_grba_int.pyx":36
  *         return self.c_grb.ThetaPrime(phi, r)
  * 
  *     def energy_profile(self, double phi, double r):             # <<<<<<<<<<<<<<
@@ -2287,11 +2287,11 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_19energy_profile(PyObject *__py
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_r)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy_profile", 1, 2, 2, 1); __PYX_ERR(1, 71, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy_profile", 1, 2, 2, 1); __PYX_ERR(1, 36, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "energy_profile") < 0)) __PYX_ERR(1, 71, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "energy_profile") < 0)) __PYX_ERR(1, 36, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2299,12 +2299,12 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_19energy_profile(PyObject *__py
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_phi = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_phi == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 71, __pyx_L3_error)
-    __pyx_v_r = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_r == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 71, __pyx_L3_error)
+    __pyx_v_phi = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_phi == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 36, __pyx_L3_error)
+    __pyx_v_r = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_r == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 36, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("energy_profile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 71, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("energy_profile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 36, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.energy_profile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2323,7 +2323,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_18energy_profile(struct __pyx_o
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("energy_profile", 0);
 
-  /* "py_grba_int.pyx":72
+  /* "py_grba_int.pyx":37
  * 
  *     def energy_profile(self, double phi, double r):
  *         return self.c_grb.EnergyProfile(phi, r)             # <<<<<<<<<<<<<<
@@ -2331,13 +2331,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_18energy_profile(struct __pyx_o
  *     def chi(self, double r0, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->EnergyProfile(__pyx_v_phi, __pyx_v_r)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 72, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->EnergyProfile(__pyx_v_phi, __pyx_v_r)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":71
+  /* "py_grba_int.pyx":36
  *         return self.c_grb.ThetaPrime(phi, r)
  * 
  *     def energy_profile(self, double phi, double r):             # <<<<<<<<<<<<<<
@@ -2356,7 +2356,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_18energy_profile(struct __pyx_o
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":74
+/* "py_grba_int.pyx":39
  *         return self.c_grb.EnergyProfile(phi, r)
  * 
  *     def chi(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2395,11 +2395,11 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_21chi(PyObject *__pyx_v_self, P
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("chi", 1, 2, 2, 1); __PYX_ERR(1, 74, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("chi", 1, 2, 2, 1); __PYX_ERR(1, 39, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "chi") < 0)) __PYX_ERR(1, 74, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "chi") < 0)) __PYX_ERR(1, 39, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2407,12 +2407,12 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_21chi(PyObject *__pyx_v_self, P
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 74, __pyx_L3_error)
-    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 74, __pyx_L3_error)
+    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 39, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 39, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("chi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 74, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("chi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 39, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.chi", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2431,7 +2431,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_20chi(struct __pyx_obj_11py_grb
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("chi", 0);
 
-  /* "py_grba_int.pyx":75
+  /* "py_grba_int.pyx":40
  * 
  *     def chi(self, double r0, double y):
  *         return self.c_grb.Chi(r0, y)             # <<<<<<<<<<<<<<
@@ -2439,13 +2439,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_20chi(struct __pyx_obj_11py_grb
  *     def r0_max(self, double y, double g, double xacc):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->Chi(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 75, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->Chi(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":74
+  /* "py_grba_int.pyx":39
  *         return self.c_grb.EnergyProfile(phi, r)
  * 
  *     def chi(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2464,7 +2464,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_20chi(struct __pyx_obj_11py_grb
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":77
+/* "py_grba_int.pyx":42
  *         return self.c_grb.Chi(r0, y)
  * 
  *     def r0_max(self, double y, double g, double xacc):             # <<<<<<<<<<<<<<
@@ -2506,17 +2506,17 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_23r0_max(PyObject *__pyx_v_self
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_g)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("r0_max", 1, 3, 3, 1); __PYX_ERR(1, 77, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("r0_max", 1, 3, 3, 1); __PYX_ERR(1, 42, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_xacc)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("r0_max", 1, 3, 3, 2); __PYX_ERR(1, 77, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("r0_max", 1, 3, 3, 2); __PYX_ERR(1, 42, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_max") < 0)) __PYX_ERR(1, 77, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_max") < 0)) __PYX_ERR(1, 42, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -2525,13 +2525,13 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_23r0_max(PyObject *__pyx_v_self
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v_y = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 77, __pyx_L3_error)
-    __pyx_v_g = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_g == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 77, __pyx_L3_error)
-    __pyx_v_xacc = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_xacc == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 77, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 42, __pyx_L3_error)
+    __pyx_v_g = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_g == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 42, __pyx_L3_error)
+    __pyx_v_xacc = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_xacc == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 42, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("r0_max", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 77, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("r0_max", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 42, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.r0_max", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2550,7 +2550,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_22r0_max(struct __pyx_obj_11py_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("r0_max", 0);
 
-  /* "py_grba_int.pyx":78
+  /* "py_grba_int.pyx":43
  * 
  *     def r0_max(self, double y, double g, double xacc):
  *         return self.c_grb.R0Max(y, g, xacc)             # <<<<<<<<<<<<<<
@@ -2558,13 +2558,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_22r0_max(struct __pyx_obj_11py_
  *     def r0_int_y(self, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->R0Max(__pyx_v_y, __pyx_v_g, __pyx_v_xacc)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 78, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->R0Max(__pyx_v_y, __pyx_v_g, __pyx_v_xacc)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":77
+  /* "py_grba_int.pyx":42
  *         return self.c_grb.Chi(r0, y)
  * 
  *     def r0_max(self, double y, double g, double xacc):             # <<<<<<<<<<<<<<
@@ -2583,7 +2583,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_22r0_max(struct __pyx_obj_11py_
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":80
+/* "py_grba_int.pyx":45
  *         return self.c_grb.R0Max(y, g, xacc)
  * 
  *     def r0_int_y(self, double y):             # <<<<<<<<<<<<<<
@@ -2599,7 +2599,7 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_25r0_int_y(PyObject *__pyx_v_se
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("r0_int_y (wrapper)", 0);
   assert(__pyx_arg_y); {
-    __pyx_v_y = __pyx_PyFloat_AsDouble(__pyx_arg_y); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 80, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(__pyx_arg_y); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 45, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2620,7 +2620,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_24r0_int_y(struct __pyx_obj_11p
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("r0_int_y", 0);
 
-  /* "py_grba_int.pyx":81
+  /* "py_grba_int.pyx":46
  * 
  *     def r0_int_y(self, double y):
  *         return self.c_grb.IntegrandY(y)             # <<<<<<<<<<<<<<
@@ -2628,13 +2628,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_24r0_int_y(struct __pyx_obj_11p
  *     def r0_int_chi(self, double r0, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandY(__pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 81, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandY(__pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 46, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":80
+  /* "py_grba_int.pyx":45
  *         return self.c_grb.R0Max(y, g, xacc)
  * 
  *     def r0_int_y(self, double y):             # <<<<<<<<<<<<<<
@@ -2653,7 +2653,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_24r0_int_y(struct __pyx_obj_11p
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":83
+/* "py_grba_int.pyx":48
  *         return self.c_grb.IntegrandY(y)
  * 
  *     def r0_int_chi(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2692,11 +2692,11 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_27r0_int_chi(PyObject *__pyx_v_
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("r0_int_chi", 1, 2, 2, 1); __PYX_ERR(1, 83, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("r0_int_chi", 1, 2, 2, 1); __PYX_ERR(1, 48, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int_chi") < 0)) __PYX_ERR(1, 83, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int_chi") < 0)) __PYX_ERR(1, 48, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2704,12 +2704,12 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_27r0_int_chi(PyObject *__pyx_v_
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 83, __pyx_L3_error)
-    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 83, __pyx_L3_error)
+    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 48, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 48, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("r0_int_chi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 83, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("r0_int_chi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 48, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.r0_int_chi", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2728,7 +2728,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_26r0_int_chi(struct __pyx_obj_1
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("r0_int_chi", 0);
 
-  /* "py_grba_int.pyx":84
+  /* "py_grba_int.pyx":49
  * 
  *     def r0_int_chi(self, double r0, double y):
  *         return self.c_grb.IntegrandChi(r0, y)             # <<<<<<<<<<<<<<
@@ -2736,13 +2736,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_26r0_int_chi(struct __pyx_obj_1
  *     def r0_int_fac(self, double r0, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandChi(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 84, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandChi(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":83
+  /* "py_grba_int.pyx":48
  *         return self.c_grb.IntegrandY(y)
  * 
  *     def r0_int_chi(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2761,7 +2761,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_26r0_int_chi(struct __pyx_obj_1
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":86
+/* "py_grba_int.pyx":51
  *         return self.c_grb.IntegrandChi(r0, y)
  * 
  *     def r0_int_fac(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2800,11 +2800,11 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_29r0_int_fac(PyObject *__pyx_v_
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("r0_int_fac", 1, 2, 2, 1); __PYX_ERR(1, 86, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("r0_int_fac", 1, 2, 2, 1); __PYX_ERR(1, 51, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int_fac") < 0)) __PYX_ERR(1, 86, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int_fac") < 0)) __PYX_ERR(1, 51, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2812,12 +2812,12 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_29r0_int_fac(PyObject *__pyx_v_
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 86, __pyx_L3_error)
-    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 86, __pyx_L3_error)
+    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 51, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 51, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("r0_int_fac", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 86, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("r0_int_fac", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 51, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.r0_int_fac", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2836,7 +2836,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_28r0_int_fac(struct __pyx_obj_1
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("r0_int_fac", 0);
 
-  /* "py_grba_int.pyx":87
+  /* "py_grba_int.pyx":52
  * 
  *     def r0_int_fac(self, double r0, double y):
  *         return self.c_grb.IntegrandFac(r0, y)             # <<<<<<<<<<<<<<
@@ -2844,13 +2844,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_28r0_int_fac(struct __pyx_obj_1
  *     def r0_int_phi(self, double r0, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandFac(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 87, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandFac(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":86
+  /* "py_grba_int.pyx":51
  *         return self.c_grb.IntegrandChi(r0, y)
  * 
  *     def r0_int_fac(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2869,7 +2869,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_28r0_int_fac(struct __pyx_obj_1
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":89
+/* "py_grba_int.pyx":54
  *         return self.c_grb.IntegrandFac(r0, y)
  * 
  *     def r0_int_phi(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2908,11 +2908,11 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_31r0_int_phi(PyObject *__pyx_v_
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("r0_int_phi", 1, 2, 2, 1); __PYX_ERR(1, 89, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("r0_int_phi", 1, 2, 2, 1); __PYX_ERR(1, 54, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int_phi") < 0)) __PYX_ERR(1, 89, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int_phi") < 0)) __PYX_ERR(1, 54, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2920,12 +2920,12 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_31r0_int_phi(PyObject *__pyx_v_
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 89, __pyx_L3_error)
-    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 89, __pyx_L3_error)
+    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 54, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 54, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("r0_int_phi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 89, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("r0_int_phi", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 54, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.r0_int_phi", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2944,7 +2944,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_30r0_int_phi(struct __pyx_obj_1
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("r0_int_phi", 0);
 
-  /* "py_grba_int.pyx":90
+  /* "py_grba_int.pyx":55
  * 
  *     def r0_int_phi(self, double r0, double y):
  *         return self.c_grb.IntegrandPhi(r0, y)             # <<<<<<<<<<<<<<
@@ -2952,13 +2952,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_30r0_int_phi(struct __pyx_obj_1
  *     def r0_int(self, double r0, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandPhi(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 90, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->IntegrandPhi(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":89
+  /* "py_grba_int.pyx":54
  *         return self.c_grb.IntegrandFac(r0, y)
  * 
  *     def r0_int_phi(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -2977,7 +2977,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_30r0_int_phi(struct __pyx_obj_1
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":92
+/* "py_grba_int.pyx":57
  *         return self.c_grb.IntegrandPhi(r0, y)
  * 
  *     def r0_int(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -3016,11 +3016,11 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_33r0_int(PyObject *__pyx_v_self
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("r0_int", 1, 2, 2, 1); __PYX_ERR(1, 92, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("r0_int", 1, 2, 2, 1); __PYX_ERR(1, 57, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int") < 0)) __PYX_ERR(1, 92, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "r0_int") < 0)) __PYX_ERR(1, 57, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -3028,12 +3028,12 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_33r0_int(PyObject *__pyx_v_self
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 92, __pyx_L3_error)
-    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 92, __pyx_L3_error)
+    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 57, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 57, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("r0_int", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 92, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("r0_int", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 57, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.r0_int", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3052,7 +3052,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_32r0_int(struct __pyx_obj_11py_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("r0_int", 0);
 
-  /* "py_grba_int.pyx":93
+  /* "py_grba_int.pyx":58
  * 
  *     def r0_int(self, double r0, double y):
  *         return self.c_grb.Integrand(r0, y)             # <<<<<<<<<<<<<<
@@ -3060,13 +3060,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_32r0_int(struct __pyx_obj_11py_
  *     def integrand(self, np.ndarray[np.double_t, ndim=1] vals, double r0, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->Integrand(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 93, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->c_grb->Integrand(__pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":92
+  /* "py_grba_int.pyx":57
  *         return self.c_grb.IntegrandPhi(r0, y)
  * 
  *     def r0_int(self, double r0, double y):             # <<<<<<<<<<<<<<
@@ -3085,7 +3085,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_32r0_int(struct __pyx_obj_11py_
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":95
+/* "py_grba_int.pyx":60
  *         return self.c_grb.Integrand(r0, y)
  * 
  *     def integrand(self, np.ndarray[np.double_t, ndim=1] vals, double r0, double y):             # <<<<<<<<<<<<<<
@@ -3127,17 +3127,17 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_35integrand(PyObject *__pyx_v_s
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_r0)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("integrand", 1, 3, 3, 1); __PYX_ERR(1, 95, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("integrand", 1, 3, 3, 1); __PYX_ERR(1, 60, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("integrand", 1, 3, 3, 2); __PYX_ERR(1, 95, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("integrand", 1, 3, 3, 2); __PYX_ERR(1, 60, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "integrand") < 0)) __PYX_ERR(1, 95, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "integrand") < 0)) __PYX_ERR(1, 60, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -3147,18 +3147,18 @@ static PyObject *__pyx_pw_11py_grba_int_7GrbaInt_35integrand(PyObject *__pyx_v_s
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
     __pyx_v_vals = ((PyArrayObject *)values[0]);
-    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 95, __pyx_L3_error)
-    __pyx_v_y = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 95, __pyx_L3_error)
+    __pyx_v_r0 = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_r0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 60, __pyx_L3_error)
+    __pyx_v_y = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_y == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 60, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("integrand", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 95, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("integrand", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 60, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("py_grba_int.GrbaInt.integrand", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(1, 95, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_vals), __pyx_ptype_5numpy_ndarray, 1, "vals", 0))) __PYX_ERR(1, 60, __pyx_L1_error)
   __pyx_r = __pyx_pf_11py_grba_int_7GrbaInt_34integrand(((struct __pyx_obj_11py_grba_int_GrbaInt *)__pyx_v_self), __pyx_v_vals, __pyx_v_r0, __pyx_v_y);
 
   /* function exit code */
@@ -3183,11 +3183,11 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_34integrand(struct __pyx_obj_11
   __pyx_pybuffernd_vals.rcbuffer = &__pyx_pybuffer_vals;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn___pyx_t_5numpy_double_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(1, 95, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_vals.rcbuffer->pybuffer, (PyObject*)__pyx_v_vals, &__Pyx_TypeInfo_nn___pyx_t_5numpy_double_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(1, 60, __pyx_L1_error)
   }
   __pyx_pybuffernd_vals.diminfo[0].strides = __pyx_pybuffernd_vals.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_vals.diminfo[0].shape = __pyx_pybuffernd_vals.rcbuffer->pybuffer.shape[0];
 
-  /* "py_grba_int.pyx":96
+  /* "py_grba_int.pyx":61
  * 
  *     def integrand(self, np.ndarray[np.double_t, ndim=1] vals, double r0, double y):
  *         return self.c_grb.IntegrandG(<double*> vals.data, r0, y)             # <<<<<<<<<<<<<<
@@ -3195,13 +3195,13 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_34integrand(struct __pyx_obj_11
  *     # def r0_max_val(self, r, y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->c_grb->IntegrandG(((double *)__pyx_v_vals->data), __pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 96, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->c_grb->IntegrandG(((double *)__pyx_v_vals->data), __pyx_v_r0, __pyx_v_y)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":95
+  /* "py_grba_int.pyx":60
  *         return self.c_grb.Integrand(r0, y)
  * 
  *     def integrand(self, np.ndarray[np.double_t, ndim=1] vals, double r0, double y):             # <<<<<<<<<<<<<<
@@ -3229,7 +3229,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_34integrand(struct __pyx_obj_11
   return __pyx_r;
 }
 
-/* "py_grba_int.pyx":106
+/* "py_grba_int.pyx":71
  *     #     return rhs - lhs
  * 
  *     def phi_int(self, r0):             # <<<<<<<<<<<<<<
@@ -3257,7 +3257,7 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_36phi_int(struct __pyx_obj_11py
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("phi_int", 0);
 
-  /* "py_grba_int.pyx":107
+  /* "py_grba_int.pyx":72
  * 
  *     def phi_int(self, r0):
  *         return PhiIntegrate(r0, self.c_grb.thv, self.c_grb.kap, self.c_grb.sig, self.c_grb.k, self.c_grb.p, self.c_grb.ga)             # <<<<<<<<<<<<<<
@@ -3265,14 +3265,14 @@ static PyObject *__pyx_pf_11py_grba_int_7GrbaInt_36phi_int(struct __pyx_obj_11py
  *     # def flux(self, double r0, double y):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_r0); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 107, __pyx_L1_error)
-  __pyx_t_2 = PyFloat_FromDouble(PhiIntegrate(__pyx_t_1, __pyx_v_self->c_grb->thv, __pyx_v_self->c_grb->kap, __pyx_v_self->c_grb->sig, __pyx_v_self->c_grb->k, __pyx_v_self->c_grb->p, __pyx_v_self->c_grb->ga)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 107, __pyx_L1_error)
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_r0); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(1, 72, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(PhiIntegrate(__pyx_t_1, __pyx_v_self->c_grb->thv, __pyx_v_self->c_grb->kap, __pyx_v_self->c_grb->sig, __pyx_v_self->c_grb->k, __pyx_v_self->c_grb->p, __pyx_v_self->c_grb->ga)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "py_grba_int.pyx":106
+  /* "py_grba_int.pyx":71
  *     #     return rhs - lhs
  * 
  *     def phi_int(self, r0):             # <<<<<<<<<<<<<<
@@ -6314,10 +6314,10 @@ PyMODINIT_FUNC PyInit_py_grba_int(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_11py_grba_int_GrbaInt) < 0) __PYX_ERR(1, 41, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_11py_grba_int_GrbaInt) < 0) __PYX_ERR(1, 6, __pyx_L1_error)
   __pyx_type_11py_grba_int_GrbaInt.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "GrbaInt", (PyObject *)&__pyx_type_11py_grba_int_GrbaInt) < 0) __PYX_ERR(1, 41, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_11py_grba_int_GrbaInt) < 0) __PYX_ERR(1, 41, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "GrbaInt", (PyObject *)&__pyx_type_11py_grba_int_GrbaInt) < 0) __PYX_ERR(1, 6, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_11py_grba_int_GrbaInt) < 0) __PYX_ERR(1, 6, __pyx_L1_error)
   __pyx_ptype_11py_grba_int_GrbaInt = &__pyx_type_11py_grba_int_GrbaInt;
   /*--- Type import code ---*/
   __pyx_ptype_7cpython_4type_type = __Pyx_ImportType(__Pyx_BUILTIN_MODULE_NAME, "type", 
@@ -6343,7 +6343,7 @@ PyMODINIT_FUNC PyInit_py_grba_int(void)
  * cimport cython
  * import numpy as np             # <<<<<<<<<<<<<<
  * cimport numpy as np
- * # from c_grba_int cimport params, GrbaIntegrator, IntG, PhiIntegrate, ScipyCallableTest
+ * from c_grba_int cimport GrbaIntegrator, PhiIntegrate
  */
   __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
