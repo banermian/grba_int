@@ -174,7 +174,7 @@ def phi_int_test():
                 R0MAX = grb.r0_max(Y_VAL,  0.21, 1.0e-7)
                 CHIMAX = grb.chi(R0MAX, Y_VAL)
                 if (R0MAX > 0.0) and (CHIMAX > 0.0) and (CHIMAX < 10.0):
-                    for R0 in np.linspace(R0MIN, R0MAX):
+                    for R0 in np.linspace(R0MIN, R0MAX-R0MIN):
                         PHI_INT = grb.r0_int_phi(R0, Y_VAL)
                         print "{}|{}|{}|{}|{}".format(
                             str.center('{:05.2f}'.format(thv), 11),
