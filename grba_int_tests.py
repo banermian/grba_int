@@ -192,6 +192,12 @@ def phi_int_test():
                             str.center('{:05.3e}'.format(0.0), 11)
                             )
 
+def phi_root_test(y, thv, kap):
+    THETA_V = np.radians(thv)
+    KAPPA = kap
+    grb = GrbaInt(THETA_V, KAPPA, SIG, K, P, GA)
+    R0_MAX = grb.r0_max(y,  0.21, 1.0e-7)
+    
 
 def test():
     HEADER_STRING =  "{}|{}|{}|{}|{}|{}|{}".format(

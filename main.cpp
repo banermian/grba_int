@@ -3,17 +3,26 @@
 #include "r0_int/r0_int.h"
 
 void phi_int_test() {
-  double R0, Y, THV, KAP;
+  double R0, R0MIN, Y, THV, KAP;
   std::cout << "Enter Y, THV, and KAP" << std::endl;
   std::cin >> Y >> THV >> KAP;
-  std::cout << "Enter R0" << std::endl;
-  std::cin >> R0;
+  std::cout << "Enter R0_MIN" << std::endl;
+  std::cin >> R0MIN;
   GrbaIntegrator grb(THV*TORAD, KAP, 2.0, 0.0, 2.2, 1.0);
-  double R0MAX = grb.R0Max(Y, 0.21, 1.0e-7);
-  // double R0 = 0.0;
-  std::cout << "R0 = " << R0 << std::endl;
+  double R0MAX = grb.R0Max(Y, 0.25, 1.0e-7);
   std::cout << "R0_MAX = " << R0MAX << std::endl;
-  std::cout << " phi_int = " << grb.IntegrandPhi(R0, Y) << std::endl;
+  R0 = R0MIN;
+  int N = 10;
+  double inc = (R0MAX - R0MIN) / N;
+  for (int i = 0; i <= N; i++) {
+    // std::cout << "R0 = " << R0 << std::endl;
+    // std::cout << " phi_int = " << grb.IntegrandPhiAlt(R0, Y) << std::endl;
+    double phi_int = grb.IntegrandPhi(R0,Y);
+    double phi_int_alt = grb.IntegrandPhiAlt(R0,Y);
+    double error = std::abs(phi_int_alt - phi_int) / phi_int * 100.0;
+    std::cout << "Absolute difference (%): " << error << "\n";
+    R0 += inc - 1.0e-9;
+  }
 }
 
 void grba_int_test() {

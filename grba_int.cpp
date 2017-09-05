@@ -47,6 +47,12 @@ double GrbaIntegrator::IntegrandPhi(double r0, double y) {
   RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
   return SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
 }
+
+double GrbaIntegrator::IntegrandPhiAlt(double r0, double y) {
+  RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
+  return SimpsPhiAlt(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
+}
+
 double GrbaIntegrator::Integrand(double r0, double y) {
   return r0*IntegrandY(y)*IntegrandChi(r0, y)*IntegrandFac(r0, y)*IntegrandPhi(r0, y);
 }

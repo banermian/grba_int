@@ -1,7 +1,7 @@
 cimport cython
 import numpy as np
 cimport numpy as np
-from c_grba_int cimport GrbaIntegrator, PhiIntegrate
+from c_grba_int cimport GrbaIntegrator, PhiIntegrate, RootFuncPhi
 
 cdef class GrbaInt:
     cdef GrbaIntegrator* c_grb
@@ -73,3 +73,21 @@ cdef class GrbaInt:
 
     # def flux(self, double r0, double y):
     #     return self.c_grb.FluxG(r0, y)
+
+cdef class RootPhi:
+    cdef RootFuncPhi* c_rf
+
+    def __cinit__(self, double r0, double thv, double kap, double sig, double k, double p, double ga):
+        self.c_rf = new RootFuncPhi(r0, thv, kap, sig, k, p, ga)
+
+    def __dealloc__(self):
+        del self.c_rf
+    
+    def root_func(self, double r):
+        return self.c_rf.F(r)
+    
+    def root_jac(self, double r):
+        return self.c_rf.DF(r)
+    
+    def set_phi(self, double phi):
+        self.c_rf.SetPhi(phi)

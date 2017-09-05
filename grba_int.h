@@ -32,6 +32,7 @@ public:
   double IntegrandChi(double chi);
   double IntegrandFac(double r0, double y);
   double IntegrandPhi(double r0, double y);
+  double IntegrandPhiAlt(double r0, double y);
   double Integrand(double r0, double y);
   int IntegrandG(double *vals, double r0, const double y);
   double R0Max(double y, double g, double xacc);
