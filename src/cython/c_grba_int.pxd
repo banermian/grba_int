@@ -1,4 +1,4 @@
-cdef extern from "grba_int.h":
+cdef extern from "../cpp/grba_int.h":
     cdef struct params:
         const double THV
         const double KAP
@@ -17,21 +17,22 @@ cdef extern from "grba_int.h":
         double IntegrandChi(double r0, double y)
         double IntegrandChi(double chi)
         double IntegrandFac(double r0, double y)
-        double IntegrandPhi(double r0, double y)
+        double IntegrandPhi(double r0, double y) except +RuntimeError
+        double IntegrandPhiAlt(double r0, double y)
         double Integrand(double r0, double y)
         int IntegrandG(double *vals, double r0, const double y)
         double R0Max(double y, double g, double xacc)
         double FluxG(double r0, const double y)
         const double thv, kap, sig, k, p, ga, gk, bg, tan_thv
 
-cdef extern from "r0_int/r0_int.h":
+cdef extern from "../cpp/r0_int/r0_int.h":
     cdef cppclass RootFuncR0:
         RootFuncR0(double Y, double THV, double KAP, double SIG, double K, double P, double GA)
         RootFuncR0(double Y, params& p)
         double F(double r0)
         double DF(double r0)
 
-cdef extern from "phi_int/phi_int.h":
+cdef extern from "../cpp/phi_int/phi_int.h":
     cdef cppclass RootFuncPhi:
         RootFuncPhi(double R0, double THV, double KAP, double SIG, double K, double P, double GA)
         RootFuncPhi(double R0, params& p)

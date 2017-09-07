@@ -41,19 +41,27 @@ cdef class GrbaInt:
 
     def r0_max(self, double y, double g, double xacc):
         return self.c_grb.R0Max(y, g, xacc)
-    
+
     def r0_int_y(self, double y):
         return self.c_grb.IntegrandY(y)
-    
+
     def r0_int_chi(self, double r0, double y):
         return self.c_grb.IntegrandChi(r0, y)
-    
+
     def r0_int_fac(self, double r0, double y):
         return self.c_grb.IntegrandFac(r0, y)
-    
+
     def r0_int_phi(self, double r0, double y):
-        return self.c_grb.IntegrandPhi(r0, y)
-    
+        try:
+            int_val = self.c_grb.IntegrandPhi(r0, y)
+        except RuntimeError:
+            int_val = 0.0
+
+        return int_val
+
+    def r0_int_phi_alt(self, double r0, double y):
+        return self.c_grb.IntegrandPhiAlt(r0, y)
+
     def r0_int(self, double r0, double y):
         return self.c_grb.Integrand(r0, y)
 
@@ -82,12 +90,12 @@ cdef class RootPhi:
 
     def __dealloc__(self):
         del self.c_rf
-    
+
     def root_func(self, double r):
         return self.c_rf.F(r)
-    
+
     def root_jac(self, double r):
         return self.c_rf.DF(r)
-    
+
     def set_phi(self, double phi):
         self.c_rf.SetPhi(phi)

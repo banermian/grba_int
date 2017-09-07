@@ -64,26 +64,32 @@ def plot_chi_test(scaling='log'):
         bbox_inches='tight'
         )
 
-def r0_int_func(thv, kap, y=0.0):
+def r0_int_func(thv, kap, y=0.0, alt=False):
     grb = GrbaInt(thv, kap, SIG, K, P, GA)
-    R0MAX = grb.r0_max(y, 0.21, 1.0e-7)
+    R0MAX = grb.r0_max(y, 0.17, 1.0e-7)
     CHIMAX = grb.chi(R0MAX, y)
-    if (R0MAX <= 0.0) or (CHIMAX >= 10.0) or (CHIMAX <= 0.0):
+    print thv*180./np.pi, kap, y, R0MAX, CHIMAX
+    if (R0MAX <= 0.0) or (R0MAX > 1.0) or (CHIMAX >= 10.0) or (CHIMAX <= 0.0):
         return (np.array([0.0]), np.array([0.0]))
-    
+
     r0 = np.linspace(1.0e-9, R0MAX)
     # f = np.vectorize(grb.r0_int)
-    f = np.vectorize(grb.r0_int_phi)
+    if alt:
+        f = np.vectorize(grb.r0_int_phi_alt)
+    else:
+        f = np.vectorize(grb.r0_int_phi)
+
     return (r0, f(r0, y))
 
 def plot_r0Int_test(scaling='log'):
     pdf_list = []
-    for y_val in [0.001, 0.1, 0.3, 0.5, 0.8, 0.9, 0.999]:
-        print y_val
-        pdf = plot_grid(r0_int_func, 'Integrand', y=y_val)
-        # print pdf.describe()
-        # sys.exit(0)
+    # for y_val in [0.001, 0.1, 0.3, 0.5, 0.8, 0.9, 0.999]:
+    for y_val in [0.2, 0.5, 0.8, 0.9]:
+        # print y_val
+        pdf = plot_grid(r0_int_func, 'r0_int', y=y_val)
+        pdf_alt = plot_grid(r0_int_func, 'r0_int_alt', y=y_val, alt=True)
         pdf_list.append(pdf)
+        pdf_list.append(pdf_alt)
 
     plot_df = pd.concat(pdf_list, ignore_index=True)
     grid = sns.FacetGrid(
@@ -92,9 +98,11 @@ def plot_r0Int_test(scaling='log'):
         palette='Paired'
     )
     grid = grid.map(plt.plot, 'r0', 'r0_int', ls='solid', lw=1.5)
+    grid = grid.map(plt.plot, 'r0', 'r0_int_alt', ls='dashed', lw=1.5, c='black')
     # grid = grid.map(plt.plot, 'r0', 'Chi_jac', ls='dashed', lw=1.5)
     for ax in grid.axes.flat:
         ax.set_yscale(scaling)
+        # ax.set_xscale(scaling)
         # ax.set_ylim(0.0, 2.0)
         # ax.set_xlim(min(r0_vals), max(r0_vals))
         # ax.axhline(y=1.0, ls='dashed', c='black', lw=1)
@@ -109,8 +117,9 @@ def plot_r0Int_test(scaling='log'):
         loc = 'upper right', bbox_to_anchor=[0.15, -0.2],
         fancybox=True, framealpha=0.5
     )
+    # plt.show()
     plt.savefig(
-        "./plots/r0'_integrand_test_{}.pdf".format(scaling),
+        "./plots/r0'_int_alt_test_{}.pdf".format(scaling),
         dpi=900,
         bbox_extra_artists=(lgd,),
         bbox_inches='tight'
@@ -120,7 +129,7 @@ def plot_grid(f, f_name='', jac=False, **kwargs):
     df_list = []
     for thv in [0.0, 0.5, 1.0, 3.0]:
         for kap in [0.0, 1.0, 3.0, 10.0]:
-            print thv*SIG, kap
+            # print thv*SIG, kap
             data = {}
             THETA_V = np.radians(thv*SIG)
             KAP = kap
@@ -197,7 +206,7 @@ def phi_root_test(y, thv, kap):
     KAPPA = kap
     grb = GrbaInt(THETA_V, KAPPA, SIG, K, P, GA)
     R0_MAX = grb.r0_max(y,  0.21, 1.0e-7)
-    
+
 
 def test():
     HEADER_STRING =  "{}|{}|{}|{}|{}|{}|{}".format(
@@ -394,8 +403,8 @@ def main():
 
 if __name__ == '__main__':
     print "running the module"
-    phi_int_test()
+    # phi_int_test()
     # print r0_integral(0.5)
     # main()
     # plot_chi_test()
-    # plot_r0Int_test()
+    plot_r0Int_test(scaling='log')

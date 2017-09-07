@@ -1,5 +1,5 @@
 # Makefile for PhiInt c++ application.
-# Nathan Frank, 24 Aug 2017.
+# Nathan Frank, 7 Sep 2017.
 
 CC = g++
 CPPFLAGS = -Wall # -I/usr/local/include
@@ -25,6 +25,7 @@ all : $(PROG)
 
 $(PROG) : $(OBJS)
 	$(CC) $(LDFLAGS) -o $(PROG) $(OBJS)
+	cp $(PROG) ../../
 
 phi_int.o : $(PHIPATH)phi_int.h
 	$(CC) $(CPPFLAGS) -c $(PHIPATH)phi_int.cpp

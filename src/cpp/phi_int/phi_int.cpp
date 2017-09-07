@@ -66,9 +66,13 @@ double RootPhi(RootFuncPhi& func, double g, const double xacc) {
     void *p = NULL;
     p = &func;
 
-    info = __cminpack_func__(hybrj1)(fcnPhi, p, n, x, fvec, fjac, ldfjac, tol, wa, lwa);
-
-    return (double)x[0];
+    try {
+      info = __cminpack_func__(hybrj1)(fcnPhi, p, n, x, fvec, fjac, ldfjac, tol, wa, lwa);
+      return (double)x[0];
+    }
+    catch (...) {
+      return 0.0;
+    }
 };
 
 double SimpsPhi(RootFuncPhi& root_func, const double a, const double b, const double eps) {
@@ -110,8 +114,8 @@ double SimpsPhi(RootFuncPhi& root_func, const double a, const double b, const do
   }
   catch (char message) {
     std::cout << "An exception occurred" << message << std::endl;
+    return 0.0;
   }
-  return 0.0;
 }
 
 double SimpsPhiAlt(RootFuncPhi& root_func, const double a, const double b, const double eps) {
@@ -152,8 +156,8 @@ double SimpsPhiAlt(RootFuncPhi& root_func, const double a, const double b, const
   }
   catch (char message) {
     std::cout << "An exception occurred" << message << std::endl;
+    return 0.0;
   }
-  return 0.0;
 }
 
 EXPORT double PhiIntegrate(const double r0, const double thv, const double kap, const double sig, const double k, const double p, const double ga) {
