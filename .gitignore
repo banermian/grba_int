@@ -1,4 +1,4 @@
-plots
-.vscode
-.idea
+.idea/
+.vscode/
+plots/
 *.nb
