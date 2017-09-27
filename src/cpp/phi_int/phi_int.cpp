@@ -28,6 +28,10 @@ void RootFuncPhi::SetPhi(double phi_val) {
   cos_phi = cos(phi_val);
 }
 
+double RootFuncPhi::rPrime() {
+  return -tan_thv*cos_phi + sqrt(r0*r0 + 2*r0*tan_thv + cos_phi*cos_phi*tan_thv_sq);
+}
+
 int fcnPhi(void *p, int n, const double *x, double *fvec, double *fjac, int ldfjac, int iflag)
 {
     /*      subroutine fcnPhi for hybrj example. */
@@ -62,46 +66,98 @@ double RootPhi(RootFuncPhi& func, double g, const double xacc) {
     void *p = NULL;
     p = &func;
 
-    info = __cminpack_func__(hybrj1)(fcnPhi, p, n, x, fvec, fjac, ldfjac, tol, wa, lwa);
-
-    return (double)x[0];
+    try {
+      info = __cminpack_func__(hybrj1)(fcnPhi, p, n, x, fvec, fjac, ldfjac, tol, wa, lwa);
+      return (double)x[0];
+    }
+    catch (...) {
+      return 0.0;
+    }
 };
 
 double SimpsPhi(RootFuncPhi& root_func, const double a, const double b, const double eps) {
   const int NMAX = 25;
+  try {
   double sum, osum = 0.0, r0 = root_func.r0;
-  for (int n = 3; n < NMAX; n++) {
-    int it, j;
-    double h, s, x, g, tnm;
-    for (it = 2, j = 1; j<n - 1; j++) it <<= 1;
-    tnm = it;
-    h = (b - a) / tnm;
-    s = 2.0;
-    g = r0;
-    x = a;
-    //printf("SimpsPhi: Nsteps = %d, step size = %02.3e, starting guess = %02.3e \n", it, h, g);
-    for (int i = 1; i < it; i++, x += h) {
-      root_func.SetPhi(x);
-      double rp = RootPhi(root_func, g, 1.0e-9);
-      g = rp;
-      double fx = pow(rp / r0, 2.0);
-      if (i % 2) {
-        s += 4.0*fx;
+    for (int n = 3; n < NMAX; n++) {
+      int it, j;
+      double h, s, x, g, tnm;
+      for (it = 2, j = 1; j<n - 1; j++) it <<= 1;
+      tnm = it;
+      h = (b - a) / tnm;
+      s = 2.0;
+      g = r0;
+      x = a;
+      //printf("SimpsPhi: Nsteps = %d, step size = %02.3e, starting guess = %02.3e \n", it, h, g);
+      for (int i = 1; i < it; i++, x += h) {
+        root_func.SetPhi(x);
+        double rp = RootPhi(root_func, g, 1.0e-9);
+        g = rp;
+        double fx = pow(rp / r0, 2.0);
+        if (i % 2) {
+          s += 4.0*fx;
+        }
+        else {
+          s += 2.0*fx;
+        }
       }
-      else {
-        s += 2.0*fx;
+      //system("pause");
+      sum = s*h / 3.0;
+      // if (n > 3)
+      if (std::abs(sum - osum) < eps*std::abs(osum) || (sum == 0.0 && osum == 0.0)) {
+        //std::cout << "n = " << n << ",\tNum Steps = " << it << ",\tSum = " << sum << std::endl;
+        return sum;
       }
+      osum = sum;
     }
-    //system("pause");
-    sum = s*h / 3.0;
-    // if (n > 3)
-    if (std::abs(sum - osum) < eps*std::abs(osum) || (sum == 0.0 && osum == 0.0)) {
-      //std::cout << "n = " << n << ",\tNum Steps = " << it << ",\tSum = " << sum << std::endl;
-      return sum;
-    }
-    osum = sum;
+    throw("Maximum number of iterations exceeded in simpsPhi");
   }
-  throw("Maximum number of iterations exceeded in simpsPhi");
+  catch (char message) {
+    std::cout << "An exception occurred" << message << std::endl;
+    return 0.0;
+  }
+}
+
+double SimpsPhiAlt(RootFuncPhi& root_func, const double a, const double b, const double eps) {
+  const int NMAX = 25;
+  try {
+  double sum, osum = 0.0, r0 = root_func.r0;
+    for (int n = 3; n < NMAX; n++) {
+      int it, j;
+      double h, s, x, g, tnm;
+      for (it = 2, j = 1; j<n - 1; j++) it <<= 1;
+      tnm = it;
+      h = (b - a) / tnm;
+      s = 2.0;
+      g = r0;
+      x = a;
+      //printf("SimpsPhi: Nsteps = %d, step size = %02.3e, starting guess = %02.3e \n", it, h, g);
+      for (int i = 1; i < it; i++, x += h) {
+        root_func.SetPhi(x);
+        double rp = root_func.rPrime();
+        double fx = pow(rp / r0, 2.0);
+        if (i % 2) {
+          s += 4.0*fx;
+        }
+        else {
+          s += 2.0*fx;
+        }
+      }
+      //system("pause");
+      sum = s*h / 3.0;
+      // if (n > 3)
+      if (std::abs(sum - osum) < eps*std::abs(osum) || (sum == 0.0 && osum == 0.0)) {
+        //std::cout << "n = " << n << ",\tNum Steps = " << it << ",\tSum = " << sum << std::endl;
+        return sum;
+      }
+      osum = sum;
+    }
+    throw("Maximum number of iterations exceeded in simpsPhi");
+  }
+  catch (char message) {
+    std::cout << "An exception occurred" << message << std::endl;
+    return 0.0;
+  }
 }
 
 EXPORT double PhiIntegrate(const double r0, const double thv, const double kap, const double sig, const double k, const double p, const double ga) {
@@ -109,12 +165,12 @@ EXPORT double PhiIntegrate(const double r0, const double thv, const double kap, 
   double sum = SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
   return sum;
 }
-// 
-// EXPORT double PhiIntegrate(double r0, params& p) {
-//   RootFuncPhi rfunc(r0, p);
-//   double sum = SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
-//   return sum;
-// }
+
+EXPORT double PhiIntegrateAlt(const double r0, const double thv, const double kap, const double sig, const double k, const double p, const double ga) {
+  RootFuncPhi rfunc(r0, thv, kap, sig, k, p, ga);
+  double sum = SimpsPhiAlt(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
+  return sum;
+}
 
 // double f(double x, void *p) {
 //   params &ps = *reinterpret_cast<params *>(p);

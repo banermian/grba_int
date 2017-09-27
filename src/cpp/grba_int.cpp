@@ -1,10 +1,7 @@
 #include "grba_int.h"
 #include "./phi_int/phi_int.h"
 #include "./r0_int/r0_int.h"
-
-// EXPORT double ScipyCallableTest(double x) {
-//   return x*x;
-// }
+#include <gsl/gsl_integration.h>
 
 GrbaIntegrator::GrbaIntegrator(const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : thv(THV), kap(KAP), sig(SIG), k(K), p(P), ga(GA), gk((4.0 - k)*ga*ga), bg((1.0 - p) / 2.0), tan_thv(tan(thv)), tan_thv_sq(tan(thv)*tan(thv)), sin_2thv(sin(2.0*thv)), cos_thv(cos(thv)), sin_thv(sin(thv)), chi_exp((7.0*k - 23.0 + bg*(13.0 + k)) / (6.0*(4.0 - k))), y_exp(0.5*(bg*(4.0 - k) + 4.0 - 3.0*k)) {}
 
@@ -28,17 +25,39 @@ double GrbaIntegrator::Chi(double r0, double y) {
   return chi;
 }
 
-double GrbaIntegrator::IntensityG(double y, double chi) {
-  double ys = pow(y, y_exp);
-  double chis = pow(chi, chi_exp);
-  double fac = pow((7.0 - 2.0*k)*chi*pow(y, 4.0 - k) + 1.0, bg - 2.0);
-  return ys*chis*fac;
+double GrbaIntegrator::IntegrandY(double y) {
+  return pow(y, y_exp);
+}
+
+double GrbaIntegrator::IntegrandChi(double r0, double y) {
+  double chi = Chi(r0, y);
+  return pow(chi, chi_exp);
+}
+
+double GrbaIntegrator::IntegrandChi(double chi) {
+  return pow(chi, chi_exp);
+}
+
+double GrbaIntegrator::IntegrandFac(double r0, double y) {
+  double chi = Chi(r0, y);
+  return pow((7.0 - 2.0*k)*chi*pow(y, 4.0 - k) + 1.0, bg - 2.0);
+}
+
+double GrbaIntegrator::IntegrandPhi(double r0, double y) {
+  RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
+  return SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
+}
+
+double GrbaIntegrator::IntegrandPhiAlt(double r0, double y) {
+  RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
+  return SimpsPhiAlt(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
+}
+
+double GrbaIntegrator::Integrand(double r0, double y) {
+  return r0*IntegrandY(y)*IntegrandChi(r0, y)*IntegrandFac(r0, y)*IntegrandPhi(r0, y);
 }
 
 int GrbaIntegrator::IntegrandG(double *vals, double r0, const double y) {
-  // const double thp0 = ThetaPrime(0.0, r0 / y);
-  // const double exp0 = pow(thp0 / sig, 2.0*kap);
-  // double chi = (y - gk*exp2(-exp0)*(y*tan_thv + r0)*(y*tan_thv + r0)) / (pow(y, 5.0 - k));
   double chi = Chi(r0, y);
   RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
   vals[0] = pow(y, y_exp);
@@ -61,53 +80,43 @@ double GrbaIntegrator::R0Max(double y, double g, double xacc) {
   return root;
 }
 
-// double GrbaIntegrator::RootFuncR0(double r0, double y) {
-//   double chi = Chi(r0, y);
-//   return chi - 1.0;
+double Integrand(double x, void *int_params) {
+  struct intparams * p = (struct intparams *)int_params;
+  const double y = p->Y;
+  const double thv = p->THV;
+  const double kap = p->KAP;
+  const double sig = p->SIG;
+  const double k = p->K;
+  const double pp = p->P;
+  const double ga = p->GA;
+  GrbaIntegrator grb(thv*TORAD, kap, sig, k, pp, ga);
+  return grb.FluxG(x, y);
+}
+
+double Integrate(const double y,  GrbaIntegrator& grb) {
+  double result, error;
+  double min = 1.0e-9;
+  double max = grb.R0Max(y, 0.21, 1.0e-7);
+  double chi_max = grb.Chi(max, y);
+  if ((chi_max > 10.0) || (chi_max < 0.0)) {
+    return 0.0;
+  }
+
+  struct intparams IP = { y, grb.thv, grb.kap, grb.sig, grb.k, grb.p, grb.ga };
+
+  gsl_integration_workspace * w
+  = gsl_integration_workspace_alloc (100);
+
+  gsl_function F;
+  F.function = &Integrand;
+  F.params = &IP;
+
+  gsl_integration_qags (&F, min, max, 0, 1e-7, 100, w, &result, &error);
+
+return result;
+}
+
+// double IntegrandG(double x, void *int_params) {
+//   struct params * p = (struct params *)int_params;
+//   GrbaIntegrator grb(p->THV*TORAD, p->KAP, p->SIG, p->K, p->P, p->GA);
 // }
-
-// double GrbaIntegrator::RootFuncR0(double r0, const double y) {
-//   // double thp0 = ThetaPrime(0.0, r0 / y);
-//   // double exp0 = pow(thp0 / sig, 2.0*kap);
-//   double eng0 = EnergyProfile(0.0, r0 / y);
-//   double lhs = (r0 / y + tan_thv)*(r0 / y + tan_thv)*eng0;
-//   double rhs = (y - pow(y, 5.0 - k)) / (gk*y*y);
-//   return lhs - rhs;
-// }
-//
-// double GrbaIntegrator::RootJacR0(double r0, const double y) {
-//   const double thp0 = ThetaPrime(0.0, r0 / y);
-//   double frac = kap*log(2.0)*pow(thp0 / sig, 2.0*kap)*((r0 + tan_thv) / (r0 * (1.0 + r0*sin(thv)*cos_thv)));
-//   double exponent = 2.0*EnergyProfile(0.0, r0 / y);
-//   return (1.0 - frac)*exponent;
-// }
-
-IntG::IntG(double R0, const double Y, const double THV, const double KAP, const double SIG, const double K, const double P, const double GA) : GrbaIntegrator(THV, KAP, SIG, K, P, GA), chi(0.0), r0(R0), y(Y), thp0(ThetaPrime(0.0, R0/Y)) {
-  SetChi();
-}
-
-IntG::IntG(double R0, const double Y, params& p) : GrbaIntegrator(p), chi(0.0), r0(R0), y(Y), thp0(ThetaPrime(0.0, R0/Y)) {
-  SetChi();
-}
-
-double IntG::IntegrandY() {
-  return pow(y, y_exp);
-}
-
-double IntG::IntegrandChi() {
-  return pow(chi, chi_exp);
-}
-
-double IntG::IntegrandFac() {
-  return pow((7.0 - 2.0*k)*chi*pow(y, 4.0 - k) + 1.0, bg - 2.0);
-}
-
-double IntG::Integrand() {
-  RootFuncPhi rfunc(r0 / y, thv, kap, sig, k, p, ga);
-  return r0*IntegrandY()*IntegrandChi()*IntegrandFac()*SimpsPhi(rfunc, 0.0, 2.0*M_PI, 1.0e-7);
-}
-
-void IntG::SetChi() {
-  // chi = (y - gk*exp2(-exp0)*(y*tan_thv + r0)*(y*tan_thv + r0)) / (pow(y, 5.0 - k));
-  chi = Chi(r0, y);
-}
