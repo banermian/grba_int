@@ -19,6 +19,7 @@ P = 2.2
 GA = 1.0
 R0MIN = 1.0e-9
 
+
 def chi_func(thv, kap, r0=0.0, y=0.0):
     grb = GrbaInt(thv, kap, SIG, K, P, GA)
     c = np.vectorize(grb.chi)
