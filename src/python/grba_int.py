@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import sys
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -15,7 +16,10 @@ class GrbaIntCuba(object):
     """Class to perform integration using cubature package"""
 
     def __init__(self, thv, kap, sig=2.0, k=0.0, p=2.2, ga=1.0):
-        self.TINY = 1.0e-13
+        # np.seterr(all='warn')
+        # warnings.filterwarnings('error')
+
+        self.TINY = 1.0e-19
 
         self.thv = np.radians(thv)
         self.kap = kap
@@ -113,9 +117,6 @@ class GrbaIntCuba(object):
 
     def _int_r0_y(self, x_array, y):
         phi, r0 = x_array
-        r0_max = self._r0_max(y)
-        if r0 > r0_max:
-            return 0.0
 
         if r0 == 0.0:
             r0 += self.TINY
@@ -128,12 +129,38 @@ class GrbaIntCuba(object):
         return val
 
 
-    def integrate_r0_y(self, y):
+    def _int_r0_y_v(self, x_array, y):
+        phi = np.array(x_array[:, 0])
+        r0 = np.array(x_array[:, 1])
+        r0[np.equal(0.0, r0)] = self.TINY
+
+        try:
+            f = np.power(np.divide(self._r_prime(phi, r0, y), r0), 2.0)
+        except Warning:
+            r0_min = np.min(r0)
+            print(y, self._r0_max(y), r0_min, phi[r0==r0_min], self._r_prime(phi[r0==r0_min], r0_min, y))
+            sys.exit(1)
+
+        chi = self.chi(r0, y)
+        val = r0*f*self.intG(y, chi)
+        return val
+
+
+    def integrate_r0_y(self, y, vectorized=False):
+        r0_max = self._r0_max(y)
+        if r0_max < self.TINY:
+            return (np.array([0.0]), np.array([0.0]))
+
         ndim = 2
         fdim = 1
-        xmin = np.array([0., 0.])
-        xmax = np.array([2.*np.pi, 1.])
-        val, err = cubature(self._int_r0_y, ndim, fdim, xmin, xmax, args=(y,))
+        xmin = np.array([0., self.TINY], np.float64)
+        xmax = np.array([2.*np.pi, r0_max], np.float64)
+        if vectorized:
+            func = self._int_r0_y_v
+        else:
+            func = self._int_r0_y
+
+        val, err = cubature(func, ndim, fdim, xmin, xmax, args=(y,), vectorized=vectorized)
         return (val, err)
 
 
@@ -432,7 +459,7 @@ def chi_test_plot(scaling="log"):
 
 
 def cuba_y_test(scaling="log"):
-    N = 10
+    N = 100
     SIG = 2.0
     df_list = []
     for thv in [0.0, 0.5, 1.0, 3.0]:
@@ -441,7 +468,7 @@ def cuba_y_test(scaling="log"):
             THETA_V = thv*SIG
             KAPPA = kap
             grb = GrbaIntCuba(THETA_V, KAPPA, sig=SIG)
-            y_vals = np.linspace(0.0, 1.0, num=N)
+            y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
             thv_array = np.repeat(thv * SIG, N)
             kap_array = np.repeat(kap, N)
             int_array = np.zeros(N)
@@ -449,7 +476,7 @@ def cuba_y_test(scaling="log"):
                 # r0_max = grb._r0_max(y)
                 # for r0 in np.linspace(0.0, r0_max, num=N):
                 #     rp = grb._r_prime()
-                int_array[i] = grb.integrate_r0_y(y)[0][0]
+                int_array[i] = grb.integrate_r0_y(y, vectorized=True)[0][0]
             
             data = {
                 "thv": thv_array,
@@ -489,7 +516,19 @@ def cuba_y_test(scaling="log"):
     # plt.clf()
 
 
+def time():
+    from scipy.integrate import quad
+    grb = GrbaIntCuba(6.0, 1.0)
+    def func(y):
+        return grb.integrate_r0_y(y, vectorized=True)[0][0]
+    # val = grb.integrate_r0_y(0.5, vectorized=True)
+    val = quad(func, 0.0, 1.0)
+    print(val)
+
+
 if __name__ == "__main__":
     # phi_integrand_plot(scaling="linear")
     # chi_test_plot(scaling="log")
     cuba_y_test(scaling="linear")
+    # import timeit
+    # print(timeit.timeit('time()', setup="from __main__ import time", number=1))
