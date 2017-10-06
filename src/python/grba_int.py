@@ -360,7 +360,7 @@ def phi_integrand_plot(scaling="log"):
     for Y in [TINY, 0.1, 0.3, 0.5, 0.8, 0.9, 1.0 - TINY]:
         for thv in [0.0, 0.5, 1.0, 3.0]:
             for kap in [0.0, 1.0, 3.0, 10.0]:
-                THETA_V = np.radians(thv*SIG)
+                THETA_V = thv*SIG
                 KAPPA = kap
                 grb = GrbaInt(THETA_V, KAPPA, sig=SIG)
                 R0_MAX = grb._r0_max(Y)
@@ -417,7 +417,7 @@ def chi_test_plot(scaling="log"):
         df_list = []
         for thv in [0.0, 0.5, 1.0, 3.0]:
             for kap in [0.0, 1.0, 3.0, 10.0]:
-                THETA_V = np.radians(thv * SIG)
+                THETA_V = thv * SIG
                 KAPPA = kap
                 grb = GrbaInt(THETA_V, KAPPA, sig=SIG)
                 R0_MAX = grb._r0_max(Y)
@@ -486,7 +486,7 @@ def cuba_y_test(scaling="log"):
                 kap_array = np.repeat(kap, N)
                 int_array = np.zeros(N)
                 y_array = np.repeat(yval, N)
-                eps_array = np.logspace(-13, -1, N)
+                eps_array = np.logspace(-19, -1, N)
                 for i, e in enumerate(eps_array):
                     int_array[i] = grb.integrate_r0_y(yval, e, vectorized=True)[0][0]
             # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
@@ -508,29 +508,89 @@ def cuba_y_test(scaling="log"):
         plot_df,
         col='kap', row='thv',
         hue='y',
-        palette='Paired'
+        palette='Paired',
+        sharey=False
     )
     grid.map(plt.plot, 'eps', 'int', lw=1)
     grid.set_titles(r"$\kappa = {col_name}$ | $\theta_V = {row_name}$")
     grid.set_axis_labels(r"$\epsilon$", r"$\int \int d\phi dr_0'$")
     handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
+    lgd = plt.legend(
+        handles, labels,
+        ncol=7, labelspacing=0.,
+        title=r"$y$",
+        loc='upper right', bbox_to_anchor=[0.15, -0.2],
+        fancybox=True, framealpha=0.5
+    )
+    for ax in grid.axes.flat:
+        ax.set_yscale(scaling)
+        ax.set_xscale(scaling)
+
+    # plt.show()
+    plt.savefig(
+        "../../plots/y_integrand_eps.pdf",
+        dpi=900,
+        bbox_inches='tight'
+    )  # bbox_extra_artists=(lgd,),
+    # plt.clf()
+
+def rPrime_test(y, scaling="log"):
+    N = 100
+    SIG = 2.0
+    df_list = []
+    for thv in [0.0, 0.5, 1.0, 3.0]:
+        # THETA_V = np.radians(thv * SIG)
+        THETA_V = thv*SIG
+        thv_array = np.repeat(THETA_V, N)
+        x_array = np.linspace(0, 1, N)
+        grb = GrbaIntCuba(THETA_V, 0.0, sig=SIG)
+        for phi in np.radians(np.linspace(0.0, 360.0, 9)):
+            phi_array = np.repeat(phi/np.pi, N)
+            r_array = -y*grb.tan_thv*np.cos(phi) + np.sqrt(x_array**2 - y**2*grb.tan_thv_sq*np.sin(phi))
+
+        # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
+        # int_array = np.zeros(N)
+        # for i, y in enumerate(y_vals):
+            # int_array[i] = grb.integrate_r0_y(y, vectorized=True)[0][0]
+
+            data = {
+                "thv": thv_array,
+                "x": x_array,
+                "phi": phi_array,
+                "rp": r_array
+            }
+            df_list.append(pd.DataFrame(data=data))
+
+    plot_df = pd.concat(df_list)
+    grid = sns.FacetGrid(
+        plot_df,
+        col='thv', col_wrap=2,
+        hue='phi',
+        palette='Paired',
+        sharey=False,
+        sharex=False
+    )
+    grid = (grid.map(plt.plot, 'x', 'rp', lw=1).add_legend(title=r"$\phi [\pi]$"))
+    grid.set_titles(r"$\theta_V = {col_name}^\circ$")
+    grid.set_axis_labels(r"$x$", r"$r'$")
+    # handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
     # lgd = plt.legend(
     #     handles, labels,
-    #     ncol=7, labelspacing=0.,
-    #     title=r"$y$",
-    #     loc='upper right', bbox_to_anchor=[0.15, -0.2],
+    #     ncol=3, labelspacing=0.,
+    #     title=r"$\phi [\pi]$",
+    #     loc='lower right', bbox_to_anchor=[1.0, 0.0],
     #     fancybox=True, framealpha=0.5
     # )
     for ax in grid.axes.flat:
         ax.set_yscale(scaling)
+        ax.set_xscale(scaling)
 
-    plt.show()
-    # plt.savefig(
-    #     "../../plots/y_integrand_TINY={}.pdf".format(grb.TINY),
-    #     dpi=900,
-    #     bbox_inches='tight'
-    # )  # bbox_extra_artists=(lgd,),
-    # plt.clf()
+    # plt.show()
+    plt.savefig(
+        "../../plots/r'(x)_y={}_{}.pdf".format(y, scaling),
+        dpi=900,
+        bbox_inches='tight'
+    )  # ,bbox_extra_artists=(lgd,)
 
 
 def time():
@@ -546,6 +606,9 @@ def time():
 if __name__ == "__main__":
     # phi_integrand_plot(scaling="linear")
     # chi_test_plot(scaling="log")
-    cuba_y_test(scaling="linear")
+    # cuba_y_test(scaling="log")
+    for y in [0.001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999]:
+        print(y)
+        rPrime_test(y, scaling="linear")
     # import timeit
     # print(timeit.timeit('time()', setup="from __main__ import time", number=1))
