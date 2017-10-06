@@ -49,14 +49,14 @@ class GrbaIntCuba(object):
     def energy_profile(self, phi, r):
         thp = self.theta_prime(phi, r)
         return np.exp2(-np.power(thp / self.sig, 2.0*self.kap))
-    
+
     # def chi(self, phi, r, y):
     def chi(self, r0, y):
         if type(y) == np.ndarray:
             y[np.equal(0.0, y)] += self.TINY
         elif y == 0.0:
             y += self.TINY
-        
+
         # cos_phi = np.cos(phi)
         # chi = (y - self.ck*(r*r + y*y*self.tan_thv_sq + 2.0*y*self.tan_thv*cos_phi*r)) / np.power(y, 5.0 - self.k)
         chi = (y - self.ck*np.power(y*self.tan_thv + r0, 2.0)) / np.power(y, 5.0 - self.k)
@@ -130,7 +130,7 @@ class GrbaIntCuba(object):
 
         if r0 == 0.0:
             r0 += self.TINY
-        
+
         rp = self._r_prime(phi, r0, y)
         f = np.power(np.divide(rp, r0), 2.0)
         chi = self.chi(r0, y)
@@ -157,14 +157,16 @@ class GrbaIntCuba(object):
         return val
 
 
-    def integrate_r0_y(self, y, vectorized=False):
+    def integrate_r0_y(self, y, eps, vectorized=False):
         r0_max = self._r0_max(y)
-        if r0_max < self.TINY:
+        # if r0_max < self.TINY:
+        if r0_max < eps:
             return (np.array([0.0]), np.array([0.0]))
 
         ndim = 2
         fdim = 1
-        xmin = np.array([0., self.TINY], np.float64)
+        # xmin = np.array([0., self.TINY], np.float64)
+        xmin = np.array([0., eps], np.float64)
         xmax = np.array([2.*np.pi, r0_max], np.float64)
         if vectorized:
             func = self._int_r0_y_v
@@ -470,7 +472,7 @@ def chi_test_plot(scaling="log"):
 
 
 def cuba_y_test(scaling="log"):
-    N = 100
+    N = 10
     SIG = 2.0
     df_list = []
     for thv in [0.0, 0.5, 1.0, 3.0]:
@@ -479,33 +481,38 @@ def cuba_y_test(scaling="log"):
             THETA_V = thv*SIG
             KAPPA = kap
             grb = GrbaIntCuba(THETA_V, KAPPA, sig=SIG)
-            y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
-            thv_array = np.repeat(thv * SIG, N)
-            kap_array = np.repeat(kap, N)
-            int_array = np.zeros(N)
-            for i, y in enumerate(y_vals):
-                # r0_max = grb._r0_max(y)
-                # for r0 in np.linspace(0.0, r0_max, num=N):
-                #     rp = grb._r_prime()
-                int_array[i] = grb.integrate_r0_y(y, vectorized=True)[0][0]
-            
-            data = {
-                "thv": thv_array,
-                "kap": kap_array,
-                "y": y_vals,
-                "int": int_array
-            }
-            df_list.append(pd.DataFrame(data=data))
+            for yval in [0.001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999]:
+                thv_array = np.repeat(thv * SIG, N)
+                kap_array = np.repeat(kap, N)
+                int_array = np.zeros(N)
+                y_array = np.repeat(yval, N)
+                eps_array = np.logspace(-13, -1, N)
+                for i, e in enumerate(eps_array):
+                    int_array[i] = grb.integrate_r0_y(yval, e, vectorized=True)[0][0]
+            # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
+            # int_array = np.zeros(N)
+            # for i, y in enumerate(y_vals):
+                # int_array[i] = grb.integrate_r0_y(y, vectorized=True)[0][0]
+
+                data = {
+                    "thv": thv_array,
+                    "kap": kap_array,
+                    "y": y_array,
+                    "eps": eps_array,
+                    "int": int_array
+                }
+                df_list.append(pd.DataFrame(data=data))
 
     plot_df = pd.concat(df_list)
     grid = sns.FacetGrid(
         plot_df,
         col='kap', row='thv',
+        hue='y',
         palette='Paired'
     )
-    grid.map(plt.plot, 'y', 'int', lw=1)
+    grid.map(plt.plot, 'eps', 'int', lw=1)
     grid.set_titles(r"$\kappa = {col_name}$ | $\theta_V = {row_name}$")
-    grid.set_axis_labels(r"$y$", r"$int$")
+    grid.set_axis_labels(r"$\epsilon$", r"$\int \int d\phi dr_0'$")
     handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
     # lgd = plt.legend(
     #     handles, labels,
