@@ -19,7 +19,7 @@ class GrbaIntCuba(object):
         # np.seterr(all='warn')
         # warnings.filterwarnings('error')
 
-        self.TINY = 1.0e-19
+        self.TINY = 1.0e-13
 
         self.thv = np.radians(thv)
         self.kap = kap
@@ -39,6 +39,16 @@ class GrbaIntCuba(object):
         self.sin_thv = np.sin(self.thv)
         self.chi_exp = (7.0*self.k - 23.0 + self.bg*(13.0 + self.k)) / (6.0*(4.0 - self.k))
         self.y_exp = 0.5*(self.bg*(4.0 - self.k) + 4.0 - 3.0*self.k)
+
+    def theta_prime(self, phi, r):
+        cos_phi = np.cos(phi)
+        numer = r*np.power(np.power(self.cos_thv, 2) - 0.25*np.power(self.sin_2thv, 2)*np.power(cos_phi, 2), 0.5)
+        denom = 1.0 + 0.5*r*self.sin_2thv*cos_phi
+        return numer / denom
+
+    def energy_profile(self, phi, r):
+        thp = self.theta_prime(phi, r)
+        return np.exp2(-np.power(thp / self.sig, 2.0*self.kap))
     
     # def chi(self, phi, r, y):
     def chi(self, r0, y):
@@ -121,9 +131,10 @@ class GrbaIntCuba(object):
         if r0 == 0.0:
             r0 += self.TINY
         
-        f = np.power(np.divide(self._r_prime(phi, r0, y), r0), 2.0)
+        rp = self._r_prime(phi, r0, y)
+        f = np.power(np.divide(rp, r0), 2.0)
         chi = self.chi(r0, y)
-        val = np.array([r0*f*self.intG(y, chi)])
+        val = np.array([(r0 + y*self.tan_thv)*f*self.intG(y, chi)*np.power(self.energy_profile(phi, rp), 4.0*(1.0 - self.bg))])
         # print(val)
 
         return val
@@ -133,16 +144,16 @@ class GrbaIntCuba(object):
         phi = np.array(x_array[:, 0])
         r0 = np.array(x_array[:, 1])
         r0[np.equal(0.0, r0)] = self.TINY
-
+        rp = self._r_prime(phi, r0, y)
         try:
-            f = np.power(np.divide(self._r_prime(phi, r0, y), r0), 2.0)
+            f = np.power(np.divide(rp, r0), 2.0)
         except Warning:
             r0_min = np.min(r0)
             print(y, self._r0_max(y), r0_min, phi[r0==r0_min], self._r_prime(phi[r0==r0_min], r0_min, y))
             sys.exit(1)
 
         chi = self.chi(r0, y)
-        val = r0*f*self.intG(y, chi)
+        val = (r0 + y*self.tan_thv)*f*self.intG(y, chi)*np.power(self.energy_profile(phi, rp), 4.0*(1.0 - self.bg))
         return val
 
 
@@ -508,17 +519,16 @@ def cuba_y_test(scaling="log"):
 
     plt.show()
     # plt.savefig(
-    #     "../../plots/chi_r0-r'_y={}.pdf".format(str(Y)),
+    #     "../../plots/y_integrand_TINY={}.pdf".format(grb.TINY),
     #     dpi=900,
-    #     bbox_extra_artists=(lgd,),
     #     bbox_inches='tight'
-    # )
+    # )  # bbox_extra_artists=(lgd,),
     # plt.clf()
 
 
 def time():
     from scipy.integrate import quad
-    grb = GrbaIntCuba(6.0, 1.0)
+    grb = GrbaIntCuba(0.0, 0.0)
     def func(y):
         return grb.integrate_r0_y(y, vectorized=True)[0][0]
     # val = grb.integrate_r0_y(0.5, vectorized=True)
