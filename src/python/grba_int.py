@@ -99,6 +99,14 @@ class GrbaIntCuba(object):
     def _r0_max(self, y):
         return np.sqrt((y - np.power(y, 5.0 - self.k)) / self.ck) - y*self.tan_thv
 
+    def _y_roots(self, phi, rp, g):
+        cos_phi = np.cos(phi)
+        def root_func(y):
+            np.power(y, 5.0 - self.k) - y + self.ck*(rp**2 + 2.0*y*rp*self.tan_thv*cos_phi + y**2*self.tan_thv_sq)
+        
+        root = fsolve(root_func, g)
+        return root
+
     def _int_r0(self, x_array, *args):
         phi, r0, y = x_array
         if y == 0.0:
@@ -166,7 +174,7 @@ class GrbaIntCuba(object):
         ndim = 2
         fdim = 1
         # xmin = np.array([0., self.TINY], np.float64)
-        xmin = np.array([0., eps], np.float64)
+        xmin = np.array([0., eps*r0_max], np.float64)
         xmax = np.array([2.*np.pi, r0_max], np.float64)
         if vectorized:
             func = self._int_r0_y_v
@@ -471,22 +479,25 @@ def chi_test_plot(scaling="log"):
         plt.clf()
 
 
-def cuba_y_test(scaling="log"):
-    N = 10
+def cuba_y_test(TINY, scaling="log"):
+    N = 200
     SIG = 2.0
     df_list = []
+    y_vals = [0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95]
     for thv in [0.0, 0.5, 1.0, 3.0]:
         for kap in [0.0, 1.0, 3.0, 10.0]:
             # THETA_V = np.radians(thv * SIG)
             THETA_V = thv*SIG
             KAPPA = kap
             grb = GrbaIntCuba(THETA_V, KAPPA, sig=SIG)
-            for yval in [0.001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999]:
+
+            for yval in y_vals:
                 thv_array = np.repeat(thv * SIG, N)
                 kap_array = np.repeat(kap, N)
                 int_array = np.zeros(N)
                 y_array = np.repeat(yval, N)
-                eps_array = np.logspace(-19, -1, N)
+                # eps_array = np.logspace(-19, -1, N)
+                eps_array = np.linspace(TINY, 1, N)
                 for i, e in enumerate(eps_array):
                     int_array[i] = grb.integrate_r0_y(yval, e, vectorized=True)[0][0]
             # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
@@ -517,18 +528,18 @@ def cuba_y_test(scaling="log"):
     handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
     lgd = plt.legend(
         handles, labels,
-        ncol=7, labelspacing=0.,
-        title=r"$y$",
+        ncol=len(y_vals), labelspacing=0.,
+        title=r"$y$ ($\epsilon =${})".format(TINY),
         loc='upper right', bbox_to_anchor=[0.15, -0.2],
         fancybox=True, framealpha=0.5
     )
     for ax in grid.axes.flat:
         ax.set_yscale(scaling)
-        ax.set_xscale(scaling)
+        # ax.set_xscale(scaling)
 
     # plt.show()
     plt.savefig(
-        "../../plots/y_integrand_eps.pdf",
+        "../../plots/y_integrand_eps={}.pdf".format(TINY),
         dpi=900,
         bbox_inches='tight'
     )  # bbox_extra_artists=(lgd,),
@@ -606,9 +617,13 @@ def time():
 if __name__ == "__main__":
     # phi_integrand_plot(scaling="linear")
     # chi_test_plot(scaling="log")
-    # cuba_y_test(scaling="log")
-    for y in [0.001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999]:
-        print(y)
-        rPrime_test(y, scaling="linear")
+    # for eps in np.logspace(-39, -19, 10, endpoint=False):
+    #     cuba_y_test(eps, scaling="log")
+        # break
+    
+    cuba_y_test(0.0, scaling="log")
+    # for y in [0.001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999]:
+    #     print(y)
+    #     rPrime_test(y, scaling="linear")
     # import timeit
     # print(timeit.timeit('time()', setup="from __main__ import time", number=1))
