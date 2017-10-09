@@ -1,4 +1,5 @@
 from __future__ import print_function
+from __future__ import division
 
 import sys
 import warnings
@@ -8,18 +9,13 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.integrate import quad, tplquad, nquad
-from scipy.optimize import fsolve
+from scipy.optimize import fsolve, root
 from cubature import cubature
 
 
-class GrbaIntCuba(object):
-    """Class to perform integration using cubature package"""
-
+class GrbaIntBase(object):
     def __init__(self, thv, kap, sig=2.0, k=0.0, p=2.2, ga=1.0):
-        # np.seterr(all='warn')
-        # warnings.filterwarnings('error')
-
-        self.TINY = 1.0e-13
+        self.TINY = 1.0e-33
 
         self.thv = np.radians(thv)
         self.kap = kap
@@ -40,98 +36,136 @@ class GrbaIntCuba(object):
         self.chi_exp = (7.0*self.k - 23.0 + self.bg*(13.0 + self.k)) / (6.0*(4.0 - self.k))
         self.y_exp = 0.5*(self.bg*(4.0 - self.k) + 4.0 - 3.0*self.k)
 
+
     def theta_prime(self, phi, r):
         cos_phi = np.cos(phi)
-        numer = r*np.power(np.power(self.cos_thv, 2) - 0.25*np.power(self.sin_2thv, 2)*np.power(cos_phi, 2), 0.5)
+        numer = r*np.sqrt(np.power(self.cos_thv, 2) - 0.25*np.power(self.sin_2thv, 2)*np.power(cos_phi, 2))
         denom = 1.0 + 0.5*r*self.sin_2thv*cos_phi
         return numer / denom
+
 
     def energy_profile(self, phi, r):
         thp = self.theta_prime(phi, r)
         return np.exp2(-np.power(thp / self.sig, 2.0*self.kap))
 
-    # def chi(self, phi, r, y):
-    def chi(self, r0, y):
-        if type(y) == np.ndarray:
-            y[np.equal(0.0, y)] += self.TINY
-        elif y == 0.0:
-            y += self.TINY
 
-        # cos_phi = np.cos(phi)
-        # chi = (y - self.ck*(r*r + y*y*self.tan_thv_sq + 2.0*y*self.tan_thv*cos_phi*r)) / np.power(y, 5.0 - self.k)
-        chi = (y - self.ck*np.power(y*self.tan_thv + r0, 2.0)) / np.power(y, 5.0 - self.k)
+    def gammaL(self, phi, r):
+        return self.ga*np.sqrt(self.energy_profile(phi, r))
+
+
+    def chi(self, phi, r, y):
+        if type(y) == np.ndarray:
+            y[np.equal(0.0, y)] = self.TINY
+        elif y == 0.0:
+            y = self.TINY
+
+        if type(r) == np.ndarray:
+            r[np.equal(0.0, r)] = self.TINY
+        elif r == 0.0:
+            r = self.TINY
+
+        cos_phi = np.cos(phi)
+        chi = (y - self.ck*(r**2 + y**2*self.tan_thv_sq + 2.0*y*self.tan_thv*cos_phi*r)) / np.power(y, 5.0 - self.k)
+        # chi = (y - self.ck*np.power(y*self.tan_thv + r0, 2.0)) / np.power(y, 5.0 - self.k)
         return chi
 
+
     def intG(self, y, chi):
-        return np.power(y, self.y_exp)*np.power(chi, self.chi_exp)*np.power((7.0 - 2.0*self.k)*chi*np.power(y, 4.0 - self.k) + 1.0, self.bg - 2.0)
+        try:
+            ig = np.power(y, self.y_exp)*np.power(chi, self.chi_exp)*np.power((7.0 - 2.0*self.k)*chi*np.power(y, 4.0 - self.k) + 1.0, self.bg - 2.0)
+
+        except FloatingPointError:
+            print(y[y<0.0], chi[chi<1.0])
+            print(np.power(y, self.y_exp), np.power(chi, self.chi_exp))
+            print((7.0 - 2.0*self.k), np.power(y, 4.0 - self.k))
+            ig = 0.0
+
+        return ig
+
+
+class GrbaIntStandard(GrbaIntBase):
+    """Class for integration using standard, on-axis methods."""
+
+    def __init__(self, thv=0.0, kap=0.0, sig=2.0, k=0.0, p=2.2, ga=1.0):
+        super(GrbaIntStandard, self).__init__(thv, kap, sig, k, p, ga)
+        self.TINY = 1.0e-13
+
+
+    def _y_roots(self, x, g):
+        # if type(x) == np.ndarray:
+
+        def func(y):
+            return y - np.power(y, (5.0 - self.k)) - self.ck*x**2
+
+        # root = fsolve(func, g)[0]
+        root_val = root(func, g)['x']  # [0]
+        return root_val
+
+
+    def _y_range(self, x):
+        min_y = self._y_roots(x, 0.1)[0]
+        max_y = self._y_roots(x, 0.9)[0]
+        return (min_y, max_y)
+
+
+    def _integrand(self, y, x):
+        # chi = (y - self.ck*x**2) / np.power(y, 5.0 - self.k)
+        chi = self.chi(0.0, x, y)
+        return x*self.intG(y, chi)
+
+
+    def integrate(self):
+        return 2.0*np.pi*nquad(self._integrand, [self._y_range, [0.0, 1.0]])[0]
+
+    # def integrand(self, x_array, *args):
+    #     y = np.array(x_array[:, 0])
+    #     x = np.array(x_array[:, 1])
+    #     y[np.equal(0.0, y)] = self.TINY
+    #     ymin = self._y_min(x)
+    #     ymax = self._y_max(x)
+    #     # y[np.logical_or(y < ymin, y > ymax)] = self.TINY
+    #     y[y < ymin] = ymin[y < ymin]
+    #     y[y > ymax] = ymax[y > ymax]
+    #     chi = (y - self.ck*x**2) / np.power(y, 5.0 - self.k)
+    #     print(chi[chi<1])
+    #     int = 2.0*np.pi*x*self.intG(y, chi)
+    #     # int[chi<1] = 0.0
+    #     return int
+    #
+    #
+    # def integrate(self):
+    #     ndim = 2
+    #     fdim = 1
+    #     xmin = np.array([0., 0.], np.float64)
+    #     xmax = np.array([1., 1.], np.float64)
+    #
+    #     val, err = cubature(self.integrand, ndim, fdim, xmin, xmax, vectorized=True)
+    #     return (val, err)
+
+
+
+class GrbaIntCuba(GrbaIntBase):
+    """Class to perform integration using cubature package"""
+
+    def __init__(self, thv, kap, sig=2.0, k=0.0, p=2.2, ga=1.0):
+        super(GrbaIntCuba, self).__init__(thv, kap, sig, k, p, ga)
+        np.seterr(divide='raise')
+        # warnings.filterwarnings('error')
+        np.set_printoptions(precision=15)
+
+        self.TINY = 1.0e-33
+
 
     def _r_prime(self, phi, r0, y):
         cos_phi = np.cos(phi)
-        rp = np.sqrt(r0*r0 + 2*r0*y*self.tan_thv + y*y*cos_phi*cos_phi*self.tan_thv_sq) - y*self.tan_thv*cos_phi
+        rp = np.sqrt(r0**2 + 2*r0*y*self.tan_thv + y**2*cos_phi**2*self.tan_thv_sq) - y*self.tan_thv*cos_phi
 
         return rp
 
-    def _y_root(self, y, x):
-        return y - np.power(y, 5.0 - self.k) - self.ck*np.power(x, 2.0)
-
-    def _int_x(self, x_array, *args):
-        x, y = x_array
-        ymin = fsolve(self._y_root, 0.1, args=(x,))
-        ymax = fsolve(self._y_root, 0.9, args=(x,))
-        print(ymin, ymax)
-        if y < ymin:
-            return 0.0
-        elif y > ymax:
-            return 0.0
-        else:
-            chi = np.divide(y - self.ck*np.power(x, 2.0), np.power(y, 5.0-self.k))
-            integrand = self.intG(y, chi)*(y >= ymin)*(y <= ymax)
-            return integrand
-
-    def integrate_x(self):
-        ndim = 2
-        fdim = 1
-        xmin = np.array([0., 0.])
-        xmax = np.array([1.0, 1.0])
-        val, err = cubature(self._int_x, ndim, fdim, xmin, xmax)
-        return (2.0*np.pi*val, err)
 
     def _r0_max(self, y):
         return np.sqrt((y - np.power(y, 5.0 - self.k)) / self.ck) - y*self.tan_thv
 
-    def _y_roots(self, phi, rp, g):
-        cos_phi = np.cos(phi)
-        def root_func(y):
-            np.power(y, 5.0 - self.k) - y + self.ck*(rp**2 + 2.0*y*rp*self.tan_thv*cos_phi + y**2*self.tan_thv_sq)
-        
-        root = fsolve(root_func, g)
-        return root
-
-    def _int_r0(self, x_array, *args):
-        phi, r0, y = x_array
-        if y == 0.0:
-            y += self.TINY
-
-        r0_max = self._r0_max(y)
-        if r0 > r0_max:
-            return 0.0
-
-        if r0 == 0.0:
-            r0 += self.TINY
-
-        f = np.power(np.divide(self._r_prime(phi, r0, y), r0), 2.0)
-        chi = self.chi(r0, y)
-        val = np.array([r0*f*self.intG(y, chi)])
-        # print(val)
-        return val
-
-    def integrate_r0(self):
-        ndim = 3
-        fdim = 1
-        xmin = np.array([0., self.TINY, self.TINY])
-        xmax = np.array([2.*np.pi, 1., 1.])
-        val, err = cubature(self._int_r0, ndim, fdim, xmin, xmax)
-        return (val, err)
 
     def _int_r0_y(self, x_array, y):
         phi, r0 = x_array
@@ -149,12 +183,13 @@ class GrbaIntCuba(object):
 
 
     def _int_r0_y_v(self, x_array, y):
-        phi = np.array(x_array[:, 0])
-        r0 = np.array(x_array[:, 1])
+        phi = np.array(x_array[:, 0], dtype=np.float64)
+        r0 = np.array(x_array[:, 1], dtype=np.float64)
         r0[np.equal(0.0, r0)] = self.TINY
         rp = self._r_prime(phi, r0, y)
         try:
-            f = np.power(np.divide(rp, r0), 2.0)
+            # f = np.power(np.divide(rp, r0), 2.0)
+            f = (rp / r0)**2
         except Warning:
             r0_min = np.min(r0)
             print(y, self._r0_max(y), r0_min, phi[r0==r0_min], self._r_prime(phi[r0==r0_min], r0_min, y))
@@ -174,8 +209,8 @@ class GrbaIntCuba(object):
         ndim = 2
         fdim = 1
         # xmin = np.array([0., self.TINY], np.float64)
-        xmin = np.array([0., eps*r0_max], np.float64)
-        xmax = np.array([2.*np.pi, r0_max], np.float64)
+        xmin = np.array([0., eps*r0_max], dtype=np.float64)
+        xmax = np.array([2.*np.pi, r0_max], dtype=np.float64)
         if vectorized:
             func = self._int_r0_y_v
         else:
@@ -183,6 +218,58 @@ class GrbaIntCuba(object):
 
         val, err = cubature(func, ndim, fdim, xmin, xmax, args=(y,), vectorized=vectorized)
         return (val, err)
+
+
+    def _int_r0(self, x_array, *args):
+        phi = np.array(x_array[:, 0], dtype=np.float64)
+        r0 = np.array(x_array[:, 1], dtype=np.float64)
+        y = np.array(x_array[:, 2], dtype=np.float64)
+        y[np.equal(0.0, y)] = self.TINY
+        r0[np.equal(0.0, r0)] = self.TINY
+        r0_max = self._r0_max(y)
+        r0[r0 > r0_max] = r0_max[r0 > r0_max] - self.TINY
+        rp = self._r_prime(phi, r0, y)
+        f = np.power(np.divide(rp, r0), 2.0)
+        chi = self.chi(0.0, r0, y)
+        chi_check = np.abs(chi - 1.0) < 1.0e-5
+        chi[chi_check] = 1.0
+        if np.any(chi < 1.0):
+            mask = chi < 1.0
+            chi[mask] = 1.0
+            val = (r0 + y*self.tan_thv)*f*self.intG(y, chi)*np.power(self.gammaL(phi, rp), 4.0*(1.0 - self.bg))
+            val[mask] = 0.0
+        else:
+            val = (r0 + y*self.tan_thv)*f*self.intG(y, chi)*np.power(self.gammaL(phi, rp), 4.0*(1.0 - self.bg))  # np.power(self.energy_profile(phi, rp), 4.0*(1.0 - self.bg))
+
+        val[r0 > r0_max] = 0.0
+        return val
+
+
+    def integrate_r0(self):
+        ndim = 3
+        fdim = 1
+        xmin = np.array([0., 0.0, 0.0], dtype=np.float64)
+        xmax = np.array([2.*np.pi, 1.0, 1.0], dtype=np.float64)
+        val, err = cubature(self._int_r0, ndim, fdim, xmin, xmax, vectorized=True)
+        return (val, err)
+
+
+class GrbaIntRP(GrbaIntBase):
+    """Class for r-prime integation"""
+
+    def __init__(self, thv, kap, sig=1.0, k=0.0, p=2.2, ga=1.0):
+        super(GrbaIntRP, self).__init__(thv, kap, sig, k, p, ga)
+        np.seterr(all='raise')
+
+
+    def _y_roots(self, phi, rp, g):
+        cos_phi = np.cos(phi)
+        def root_func(y):
+            return y - np.power(y, 5.0 - self.k) - self.ck*(rp**2 + 2.0*y*rp*self.tan_thv*cos_phi + y**2*self.tan_thv_sq)
+
+        root_val = root(root_func, g)
+        return (root_val.x[0], root_val['success'])
+
 
 
 class GrbaInt(object):
@@ -489,101 +576,107 @@ def cuba_y_test(TINY, scaling="log"):
             # THETA_V = np.radians(thv * SIG)
             THETA_V = thv*SIG
             KAPPA = kap
+            thv_array = np.repeat(THETA_V, N)
+            kap_array = np.repeat(KAPPA, N)
             grb = GrbaIntCuba(THETA_V, KAPPA, sig=SIG)
 
-            for yval in y_vals:
-                thv_array = np.repeat(thv * SIG, N)
-                kap_array = np.repeat(kap, N)
-                int_array = np.zeros(N)
-                y_array = np.repeat(yval, N)
-                # eps_array = np.logspace(-19, -1, N)
-                eps_array = np.linspace(TINY, 1, N)
-                for i, e in enumerate(eps_array):
-                    int_array[i] = grb.integrate_r0_y(yval, e, vectorized=True)[0][0]
+            # for yval in y_vals:
+            #     int_array = np.zeros(N)
+            #     y_array = np.repeat(yval, N)
+            #     # eps_array = np.logspace(-19, -1, N)
+            #     eps_array = np.linspace(TINY, 1, N)
+            #     for i, e in enumerate(eps_array):
+            #         int_array[i] = grb.integrate_r0_y(yval, e, vectorized=True)[0][0]
             # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
-            # int_array = np.zeros(N)
-            # for i, y in enumerate(y_vals):
-                # int_array[i] = grb.integrate_r0_y(y, vectorized=True)[0][0]
-
-                data = {
-                    "thv": thv_array,
-                    "kap": kap_array,
-                    "y": y_array,
-                    "eps": eps_array,
-                    "int": int_array
-                }
-                df_list.append(pd.DataFrame(data=data))
-
-    plot_df = pd.concat(df_list)
-    grid = sns.FacetGrid(
-        plot_df,
-        col='kap', row='thv',
-        hue='y',
-        palette='Paired',
-        sharey=False
-    )
-    grid.map(plt.plot, 'eps', 'int', lw=1)
-    grid.set_titles(r"$\kappa = {col_name}$ | $\theta_V = {row_name}$")
-    grid.set_axis_labels(r"$\epsilon$", r"$\int \int d\phi dr_0'$")
-    handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
-    lgd = plt.legend(
-        handles, labels,
-        ncol=len(y_vals), labelspacing=0.,
-        title=r"$y$ ($\epsilon =${})".format(TINY),
-        loc='upper right', bbox_to_anchor=[0.15, -0.2],
-        fancybox=True, framealpha=0.5
-    )
-    for ax in grid.axes.flat:
-        ax.set_yscale(scaling)
-        # ax.set_xscale(scaling)
-
-    # plt.show()
-    plt.savefig(
-        "../../plots/y_integrand_eps={}.pdf".format(TINY),
-        dpi=900,
-        bbox_inches='tight'
-    )  # bbox_extra_artists=(lgd,),
-    # plt.clf()
-
-def rPrime_test(y, scaling="log"):
-    N = 100
-    SIG = 2.0
-    df_list = []
-    for thv in [0.0, 0.5, 1.0, 3.0]:
-        # THETA_V = np.radians(thv * SIG)
-        THETA_V = thv*SIG
-        thv_array = np.repeat(THETA_V, N)
-        x_array = np.linspace(0, 1, N)
-        grb = GrbaIntCuba(THETA_V, 0.0, sig=SIG)
-        for phi in np.radians(np.linspace(0.0, 360.0, 9)):
-            phi_array = np.repeat(phi/np.pi, N)
-            r_array = -y*grb.tan_thv*np.cos(phi) + np.sqrt(x_array**2 - y**2*grb.tan_thv_sq*np.sin(phi))
-
-        # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
-        # int_array = np.zeros(N)
-        # for i, y in enumerate(y_vals):
-            # int_array[i] = grb.integrate_r0_y(y, vectorized=True)[0][0]
+            y_vals = np.linspace(0.0, 1.0, num=N, dtype=np.float64)
+            int_array = np.zeros(N)
+            for i, y in enumerate(y_vals):
+                int_array[i] = grb.integrate_r0_y(y, TINY, vectorized=True)[0][0]
 
             data = {
                 "thv": thv_array,
-                "x": x_array,
-                "phi": phi_array,
-                "rp": r_array
+                "kap": kap_array,
+                "y": y_vals,
+                "int": int_array
             }
             df_list.append(pd.DataFrame(data=data))
 
     plot_df = pd.concat(df_list)
     grid = sns.FacetGrid(
         plot_df,
-        col='thv', col_wrap=2,
-        hue='phi',
+        col='kap', row='thv',
         palette='Paired',
-        sharey=False,
-        sharex=False
+        sharey=False
     )
-    grid = (grid.map(plt.plot, 'x', 'rp', lw=1).add_legend(title=r"$\phi [\pi]$"))
+    grid.map(plt.plot, 'y', 'int', lw=1)
+    grid.set_titles(r"$\kappa = {col_name}$ | $\theta_V = {row_name}$")
+    grid.set_axis_labels(r"$y$", r"$y-integrand$")
+    # handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
+    # lgd = plt.legend(
+    #     handles, labels,
+    #     ncol=len(y_vals), labelspacing=0.,
+    #     title=r"$y$ ($\epsilon =${})".format(TINY),
+    #     loc='upper right', bbox_to_anchor=[0.15, -0.2],
+    #     fancybox=True, framealpha=0.5
+    # )
+    for ax in grid.axes.flat:
+        ax.set_yscale(scaling)
+        # ax.set_xscale(scaling)
+
+    plt.show()
+    # plt.savefig(
+    #     "../../plots/y_integrand_eps={}.pdf".format(TINY),
+    #     dpi=900,
+    #     bbox_inches='tight'
+    # )  # bbox_extra_artists=(lgd,),
+    # plt.clf()
+
+def rPrime_test(TINY, scaling="log"):
+    N = 100
+    SIG = 2.0
+    df_list = []
+    # for thv in [0.0, 0.5, 1.0, 3.0]:
+    for thv in [0.0]:
+        THETA_V = thv*SIG
+        thv_array = np.repeat(THETA_V, N)
+        # grb = GrbaIntCuba(THETA_V, 0.0, sig=SIG)
+        grb = GrbaIntRP(THETA_V, 0.0, sig=SIG)
+        # x_array = np.linspace(0, 1, N)
+        # for phi in np.radians(np.linspace(0.0, 360.0, 9)):
+        #     phi_array = np.repeat(phi/np.pi, N)
+        #     r_array = -y*grb.tan_thv*np.cos(phi) + np.sqrt(x_array**2 - y**2*grb.tan_thv_sq*np.sin(phi))
+
+        # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
+        # y_vals = np.linspace(0.0, 1.0, num=N, dtype=np.float64)
+        # int_array = np.zeros(N)
+        # err_array = np.zeros(N)
+        # for i, y in enumerate(y_vals):
+        #     int_val = grb.integrate_r0_y(y, TINY, vectorized=True)
+        #     int_array[i] = int_val[0][0]
+        #     err_array[i] = int_val[1][0]
+
+        data = {
+            "thv": thv_array,
+            "phi": phi_array,
+            "rp": rp_array,
+            "root": root_array
+        }
+        df_list.append(pd.DataFrame(data=data))
+
+
+
+    plot_df = pd.concat(df_list)
+    grid = sns.FacetGrid(
+        plot_df,
+        col='thv', col_wrap=2,
+        sharey=True,
+        sharex=True
+    )
+    # grid = grid.map(plt.plot, 'y', 'int', lw=1)  # .add_legend(title=r"$\phi [\pi]$"))
+    grid = grid.map(plt.plot, 'y', 'err', lw=1, ls='dashed')
+    # grid = grid.map(plt.contour, "phi", "rp", "root")
     grid.set_titles(r"$\theta_V = {col_name}^\circ$")
-    grid.set_axis_labels(r"$x$", r"$r'$")
+    grid.set_axis_labels(r"$\phi [\pi]$", r"$r'$")
     # handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
     # lgd = plt.legend(
     #     handles, labels,
@@ -592,16 +685,61 @@ def rPrime_test(y, scaling="log"):
     #     loc='lower right', bbox_to_anchor=[1.0, 0.0],
     #     fancybox=True, framealpha=0.5
     # )
-    for ax in grid.axes.flat:
-        ax.set_yscale(scaling)
-        ax.set_xscale(scaling)
+    # for ax in grid.axes.flat:
+    #     ax.set_yscale(scaling)
+        # ax.set_xscale(scaling)
 
-    # plt.show()
-    plt.savefig(
-        "../../plots/r'(x)_y={}_{}.pdf".format(y, scaling),
-        dpi=900,
-        bbox_inches='tight'
-    )  # ,bbox_extra_artists=(lgd,)
+    plt.show()
+    # plt.savefig(
+    #     "../../plots/integrand_eps={}_{}.pdf".format(TINY, scaling),
+    #     dpi=900,
+    #     bbox_inches='tight'
+    # )  # ,bbox_extra_artists=(lgd,)
+
+
+def y_roots_rp():
+    def contourplot(*args, **kwargs):
+        data = kwargs.pop("data").pivot(args[1], args[0])[args[2]]
+        X, Y = np.meshgrid(data.columns, data.index)
+        ax = plt.gca()
+        mappable = ax.contour(X, Y, data, *args[3:], **kwargs)
+        # ax.figure.colorbar(mappable)
+
+    N = 100
+    SIG = 2.0
+    df_list = []
+    phi = np.linspace(0, 2, N)
+    rp = np.linspace(0, 1, N)
+    P, R = np.meshgrid(phi, rp)
+    for thv in [0.0, 0.5, 1.0, 3.0]:
+        print(thv)
+        grb = GrbaIntRP(thv*SIG, 1.0)
+        root = np.zeros(P.shape)
+        for i in range(len(P)):
+            for j in range(len(P[i])):
+                root[i][j] = grb._y_roots(P[i][j]*np.pi, R[i][j], 0.1)[0]
+
+
+        df = pd.DataFrame(
+            dict(
+                phi=P.ravel(),
+                rp=R.ravel(),
+                root=root.ravel(),
+                thv=np.repeat(thv*SIG, len(P.ravel()))
+            )
+        )
+        df_list.append(df)
+
+    plot_df = pd.concat(df_list)
+    g = sns.FacetGrid(plot_df, col='thv', col_wrap=2)
+    g.map_dataframe(contourplot, 'rp', 'phi', 'root')
+    g.set_titles(r"$\theta_V = {col_name}^\circ$")
+    g.set_axis_labels(r"$r'$", r"$\phi [\pi]$")
+    for ax in g.axes.flat:
+        ax.set_ylim(0, 1)
+
+    plt.colorbar()
+    plt.show()
 
 
 def time():
@@ -614,14 +752,22 @@ def time():
     print(val)
 
 
+def test():
+    grb = GrbaIntCuba(0.0, 0.0)
+    grb.integrate_r0()
+
+
 if __name__ == "__main__":
+    y_roots_rp()
+    # test()
     # phi_integrand_plot(scaling="linear")
     # chi_test_plot(scaling="log")
     # for eps in np.logspace(-39, -19, 10, endpoint=False):
     #     cuba_y_test(eps, scaling="log")
         # break
-    
-    cuba_y_test(0.0, scaling="log")
+
+    # cuba_y_test(0.0, scaling="log")
+    # rPrime_test(0.1)
     # for y in [0.001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999]:
     #     print(y)
     #     rPrime_test(y, scaling="linear")
