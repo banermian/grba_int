@@ -702,8 +702,8 @@ def y_roots_rp():
         data = kwargs.pop("data").pivot(args[1], args[0])[args[2]]
         X, Y = np.meshgrid(data.columns, data.index)
         ax = plt.gca()
-        mappable = ax.contour(X, Y, data, *args[3:], **kwargs)
-        # ax.figure.colorbar(mappable)
+        mappable = ax.contourf(X, Y, data, *args[3:], **kwargs)
+        ax.figure.colorbar(mappable)
 
     N = 100
     SIG = 2.0
@@ -738,7 +738,7 @@ def y_roots_rp():
     for ax in g.axes.flat:
         ax.set_ylim(0, 1)
 
-    plt.colorbar()
+
     plt.show()
 
 
