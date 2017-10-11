@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 from scipy.integrate import quad, tplquad, nquad
 from scipy.optimize import fsolve, root
 from cubature import cubature
@@ -59,10 +60,10 @@ class GrbaIntBase(object):
         elif y == 0.0:
             y = self.TINY
 
-        if type(r) == np.ndarray:
-            r[np.equal(0.0, r)] = self.TINY
-        elif r == 0.0:
-            r = self.TINY
+        # if type(r) == np.ndarray:
+        #     r[np.equal(0.0, r)] = self.TINY
+        # elif r == 0.0:
+        #     r = self.TINY
 
         cos_phi = np.cos(phi)
         chi = (y - self.ck*(r**2 + y**2*self.tan_thv_sq + 2.0*y*self.tan_thv*cos_phi*r)) / np.power(y, 5.0 - self.k)
@@ -143,13 +144,12 @@ class GrbaIntStandard(GrbaIntBase):
     #     return (val, err)
 
 
-
 class GrbaIntCuba(GrbaIntBase):
     """Class to perform integration using cubature package"""
 
     def __init__(self, thv, kap, sig=2.0, k=0.0, p=2.2, ga=1.0):
         super(GrbaIntCuba, self).__init__(thv, kap, sig, k, p, ga)
-        np.seterr(divide='raise')
+        np.seterr(all='raise')
         # warnings.filterwarnings('error')
         np.set_printoptions(precision=15)
 
@@ -183,8 +183,8 @@ class GrbaIntCuba(GrbaIntBase):
 
 
     def _int_r0_y_v(self, x_array, y):
-        phi = np.array(x_array[:, 0], dtype=np.float64)
-        r0 = np.array(x_array[:, 1], dtype=np.float64)
+        phi = np.array(x_array[:, 0], dtype=np.float128)
+        r0 = np.array(x_array[:, 1], dtype=np.float128)
         r0[np.equal(0.0, r0)] = self.TINY
         rp = self._r_prime(phi, r0, y)
         try:
@@ -195,7 +195,7 @@ class GrbaIntCuba(GrbaIntBase):
             print(y, self._r0_max(y), r0_min, phi[r0==r0_min], self._r_prime(phi[r0==r0_min], r0_min, y))
             sys.exit(1)
 
-        chi = self.chi(r0, y)
+        chi = self.chi(0.0, r0, y)
         val = (r0 + y*self.tan_thv)*f*self.intG(y, chi)*np.power(self.energy_profile(phi, rp), 4.0*(1.0 - self.bg))
         return val
 
@@ -209,8 +209,8 @@ class GrbaIntCuba(GrbaIntBase):
         ndim = 2
         fdim = 1
         # xmin = np.array([0., self.TINY], np.float64)
-        xmin = np.array([0., eps*r0_max], dtype=np.float64)
-        xmax = np.array([2.*np.pi, r0_max], dtype=np.float64)
+        xmin = np.array([0., eps*r0_max], dtype=np.float128)
+        xmax = np.array([2.*np.pi, r0_max], dtype=np.float128)
         if vectorized:
             func = self._int_r0_y_v
         else:
@@ -255,7 +255,7 @@ class GrbaIntCuba(GrbaIntBase):
 
 
 class GrbaIntRP(GrbaIntBase):
-    """Class for r-prime integation"""
+    """Class for r-prime integration"""
 
     def __init__(self, thv, kap, sig=1.0, k=0.0, p=2.2, ga=1.0):
         super(GrbaIntRP, self).__init__(thv, kap, sig, k, p, ga)
@@ -265,10 +265,81 @@ class GrbaIntRP(GrbaIntBase):
     def _y_roots(self, phi, rp, g):
         cos_phi = np.cos(phi)
         def root_func(y):
-            return y - np.power(y, 5.0 - self.k) - self.ck*(rp**2 + 2.0*y*rp*self.tan_thv*cos_phi + y**2*self.tan_thv_sq)
+            # print(np.power(y, 5.0 - self.k))
+            root_func_val = y - np.power(y, 5.0 - self.k) - self.ck*(rp**2 + 2.0*y*rp*self.tan_thv*cos_phi + y**2*self.tan_thv_sq)
+            # print(root_func_val)
+            # print(root_val)
+            return root_func_val
 
         root_val = root(root_func, g)
-        return (root_val.x[0], root_val['success'])
+        return (root_val.x, root_val['success'])
+        # return root_val.x
+        # root_val = fsolve(root_func, g)
+        # return root_val
+
+
+    def _y_min(self, phi, r):
+        return self._y_roots(phi, r, 0.1)[0]
+
+
+    def _y_max(self, phi, r):
+        return self._y_roots(phi, r, 0.9)[0]
+
+
+    def _r_min(self, phi):
+        return 0.0
+
+
+    def _r_max(self, phi):
+        return 1.0
+
+
+    def _integrand(self, y, r, phi):
+            cos_phi = np.cos(phi)
+            chi = self.chi(phi, r, y)
+            val = (r + y*self.tan_thv*cos_phi)*self.intG(y, chi)  # *np.power(self.gammaL(phi, r), 4.0*(1.0 - self.bg))
+            return val
+
+
+    def _integrand_cuba(self, x_array, *args):
+        y = np.array(x_array[:, 0], dtype=np.float64)
+        r = np.array(x_array[:, 1], dtype=np.float64)
+        phi = np.array(x_array[:, 2], dtype=np.float64)
+        ymin = self._y_roots(phi, r, np.repeat(0.1, len(phi)))
+        ymax = self._y_roots(phi, r, np.repeat(0.9, len(phi)))
+        cos_phi = np.cos(phi)
+        y[np.less(y, ymin)] = ymin[np.less(y, ymin)]
+        y[np.greater(y, ymax)] = ymax[np.greater(y, ymax)]
+        y[np.equal(0.0, y)] = self.TINY
+        chi = self.chi(phi, r, y)
+        chi_check = np.abs(chi - 1.0) < 1.0e-5
+        chi[chi_check] = 1.0
+        if np.any(chi < 1.0):
+            mask = chi < 1.0
+            chi[mask] = 1.0
+            val = (r + y*self.tan_thv*cos_phi)*self.intG(y, chi)  # *np.power(self.gammaL(phi, rp), 4.0*(1.0 - self.bg))
+            val[mask] = 0.0
+        else:
+            val = (r + y*self.tan_thv*cos_phi)*self.intG(y, chi)  # *np.power(self.gammaL(phi, rp), 4.0*(1.0 - self.bg))
+
+        return val
+
+
+    def integrate(self):
+        # ymin = self._y_roots(phi, r, 0.1)[0]
+        # ymax = self._y_roots(phi, r, 0.9)[0]
+        # int_val = quad(self._integrand, ymin, ymax, args=(r, phi))
+        int_val = tplquad(self._integrand, 0.0, 2.0*np.pi, self._r_min, self._r_max, self._y_min, self._y_max)
+        return int_val
+
+
+    def integrate_cuba(self):
+        ndim = 3
+        fdim = 1
+        xmin = np.array([0.0, 0.0, 0.0], dtype=np.float64)
+        xmax = np.array([1.0, 1.0, 2.0*np.pi], dtype=np.float64)
+        val, err = cubature(self._integrand_cuba, ndim, fdim, xmin, xmax, vectorized=True)
+        return (val, err)
 
 
 
@@ -631,35 +702,36 @@ def cuba_y_test(TINY, scaling="log"):
     # )  # bbox_extra_artists=(lgd,),
     # plt.clf()
 
+
 def rPrime_test(TINY, scaling="log"):
     N = 100
     SIG = 2.0
     df_list = []
-    # for thv in [0.0, 0.5, 1.0, 3.0]:
-    for thv in [0.0]:
+    for thv in [0.0, 0.5, 1.0, 3.0]:
+    # for thv in [0.0]:
         THETA_V = thv*SIG
         thv_array = np.repeat(THETA_V, N)
-        # grb = GrbaIntCuba(THETA_V, 0.0, sig=SIG)
-        grb = GrbaIntRP(THETA_V, 0.0, sig=SIG)
+        grb = GrbaIntCuba(THETA_V, 0.0, sig=SIG)
+        # grb = GrbaIntRP(THETA_V, 0.0, sig=SIG)
         # x_array = np.linspace(0, 1, N)
         # for phi in np.radians(np.linspace(0.0, 360.0, 9)):
         #     phi_array = np.repeat(phi/np.pi, N)
         #     r_array = -y*grb.tan_thv*np.cos(phi) + np.sqrt(x_array**2 - y**2*grb.tan_thv_sq*np.sin(phi))
 
         # y_vals = np.linspace(grb.TINY, 1.0-grb.TINY, num=N)
-        # y_vals = np.linspace(0.0, 1.0, num=N, dtype=np.float64)
-        # int_array = np.zeros(N)
-        # err_array = np.zeros(N)
-        # for i, y in enumerate(y_vals):
-        #     int_val = grb.integrate_r0_y(y, TINY, vectorized=True)
-        #     int_array[i] = int_val[0][0]
-        #     err_array[i] = int_val[1][0]
+        y_vals = np.linspace(0.0, 1.0, num=N, dtype=np.float128)
+        int_array = np.zeros(N)
+        err_array = np.zeros(N)
+        for i, y in enumerate(y_vals):
+            int_val = grb.integrate_r0_y(y, TINY, vectorized=True)
+            int_array[i] = int_val[0][0]
+            err_array[i] = int_val[1][0]
 
         data = {
             "thv": thv_array,
-            "phi": phi_array,
-            "rp": rp_array,
-            "root": root_array
+            "y": y_vals,
+            "int": int_array,
+            "err": err_array
         }
         df_list.append(pd.DataFrame(data=data))
 
@@ -669,14 +741,14 @@ def rPrime_test(TINY, scaling="log"):
     grid = sns.FacetGrid(
         plot_df,
         col='thv', col_wrap=2,
-        sharey=True,
+        sharey=False,
         sharex=True
     )
-    # grid = grid.map(plt.plot, 'y', 'int', lw=1)  # .add_legend(title=r"$\phi [\pi]$"))
+    grid = grid.map(plt.plot, 'y', 'int', lw=1)  # .add_legend(title=r"$\phi [\pi]$"))
     grid = grid.map(plt.plot, 'y', 'err', lw=1, ls='dashed')
     # grid = grid.map(plt.contour, "phi", "rp", "root")
     grid.set_titles(r"$\theta_V = {col_name}^\circ$")
-    grid.set_axis_labels(r"$\phi [\pi]$", r"$r'$")
+    grid.set_axis_labels(r"$y$", r"$int$")
     # handles, labels = grid.fig.get_axes()[0].get_legend_handles_labels()
     # lgd = plt.legend(
     #     handles, labels,
@@ -685,8 +757,8 @@ def rPrime_test(TINY, scaling="log"):
     #     loc='lower right', bbox_to_anchor=[1.0, 0.0],
     #     fancybox=True, framealpha=0.5
     # )
-    # for ax in grid.axes.flat:
-    #     ax.set_yscale(scaling)
+    for ax in grid.axes.flat:
+        ax.set_yscale(scaling)
         # ax.set_xscale(scaling)
 
     plt.show()
@@ -699,10 +771,14 @@ def rPrime_test(TINY, scaling="log"):
 
 def y_roots_rp():
     def contourplot(*args, **kwargs):
+        chis = kwargs['data'].chi
         data = kwargs.pop("data").pivot(args[1], args[0])[args[2]]
         X, Y = np.meshgrid(data.columns, data.index)
         ax = plt.gca()
-        mappable = ax.contourf(X, Y, data, *args[3:], **kwargs)
+        mappable = ax.contourf(X, Y, data,
+                               *args[3:],
+                               norm=colors.SymLogNorm(linthresh=1.0, vmin=chis.min(), vmax=chis.max()),
+                               **kwargs)
         ax.figure.colorbar(mappable)
 
     N = 100
@@ -710,21 +786,28 @@ def y_roots_rp():
     df_list = []
     phi = np.linspace(0, 2, N)
     rp = np.linspace(0, 1, N)
+    # rp = np.linspace(-19, 0, N)
     P, R = np.meshgrid(phi, rp)
     for thv in [0.0, 0.5, 1.0, 3.0]:
         print(thv)
         grb = GrbaIntRP(thv*SIG, 1.0)
         root = np.zeros(P.shape)
+        chis = np.zeros(P.shape)
+        err = np.zeros(P.shape)
         for i in range(len(P)):
             for j in range(len(P[i])):
-                root[i][j] = grb._y_roots(P[i][j]*np.pi, R[i][j], 0.1)[0]
-
+                rp_val = np.power(10.0, R[i][j])
+                root_val = grb._y_roots(P[i][j]*np.pi, rp_val, 0.1)
+                root[i][j] = root_val[0][0]
+                err[i][j] = int(root_val[1])
+                chis[i][j] = grb.chi(P[i][j]*np.pi, rp_val, root_val[0][0])
 
         df = pd.DataFrame(
             dict(
                 phi=P.ravel(),
                 rp=R.ravel(),
                 root=root.ravel(),
+                chi=chis.ravel(),
                 thv=np.repeat(thv*SIG, len(P.ravel()))
             )
         )
@@ -732,9 +815,9 @@ def y_roots_rp():
 
     plot_df = pd.concat(df_list)
     g = sns.FacetGrid(plot_df, col='thv', col_wrap=2)
-    g.map_dataframe(contourplot, 'rp', 'phi', 'root')
+    g.map_dataframe(contourplot, 'phi', 'rp', 'chi')
     g.set_titles(r"$\theta_V = {col_name}^\circ$")
-    g.set_axis_labels(r"$r'$", r"$\phi [\pi]$")
+    g.set_axis_labels(r"$\phi [\pi]$", r"$r'$")
     for ax in g.axes.flat:
         ax.set_ylim(0, 1)
 
@@ -743,18 +826,33 @@ def y_roots_rp():
 
 
 def time():
-    from scipy.integrate import quad
-    grb = GrbaIntCuba(0.0, 0.0)
-    def func(y):
-        return grb.integrate_r0_y(y, vectorized=True)[0][0]
+    # from scipy.integrate import quad
+    grb = GrbaIntRP(6.0, 0.0)
+    phi = np.linspace(0.0, np.pi, 10)
+    rp = np.linspace(0.0, 1.0, 10)
+    g = np.repeat(0.1, len(phi))
+    roots = grb._y_roots(phi, rp, g)
     # val = grb.integrate_r0_y(0.5, vectorized=True)
-    val = quad(func, 0.0, 1.0)
-    print(val)
+    # val = quad(func, 0.0, 1.0)
+    # print(roots)
 
 
 def test():
-    grb = GrbaIntCuba(0.0, 0.0)
-    grb.integrate_r0()
+    grb = GrbaIntRP(0.0, 0.0)
+    # grb.integrate_cuba()
+    phi = np.repeat(0.0, 10)
+    rp = np.repeat(1.0e-33, 10)
+    # phi = np.linspace(0, np.pi, 10)
+    # rp = np.linspace(0, 1, 10)
+    # g = np.repeat(0.1, 10)
+    # roots = grb._y_roots(phi, rp, g)
+    ymin = grb._y_roots(phi, rp, np.repeat(0.1, 10))
+    ymax = grb._y_roots(phi, rp, np.repeat(0.9, 10))
+    y = np.linspace(0, 1, 10)
+    print(ymin)
+    print(ymax)
+    print(y)
+    print(np.logical_or(y < ymin, y > ymax))
 
 
 if __name__ == "__main__":
@@ -767,9 +865,9 @@ if __name__ == "__main__":
         # break
 
     # cuba_y_test(0.0, scaling="log")
-    # rPrime_test(0.1)
+    # rPrime_test(1.0e-19)
     # for y in [0.001, 0.1, 0.25, 0.5, 0.75, 0.9, 0.999]:
     #     print(y)
     #     rPrime_test(y, scaling="linear")
     # import timeit
-    # print(timeit.timeit('time()', setup="from __main__ import time", number=1))
+    # print(timeit.repeat('time()', setup="from __main__ import time", number=1000))
