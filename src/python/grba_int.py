@@ -259,23 +259,22 @@ class GrbaIntRP(GrbaIntBase):
 
     def __init__(self, thv, kap, sig=1.0, k=0.0, p=2.2, ga=1.0):
         super(GrbaIntRP, self).__init__(thv, kap, sig, k, p, ga)
+        self.TINY = 1.0e-19
+
         np.seterr(all='raise')
 
 
-    def _y_roots(self, phi, rp, g):
+    def _y_root_func(self, y, phi, rp):
         cos_phi = np.cos(phi)
-        def root_func(y):
-            # print(np.power(y, 5.0 - self.k))
-            root_func_val = y - np.power(y, 5.0 - self.k) - self.ck*(rp**2 + 2.0*y*rp*self.tan_thv*cos_phi + y**2*self.tan_thv_sq)
-            # print(root_func_val)
-            # print(root_val)
-            return root_func_val
+        root_func_val = y - np.power(y, 5.0 - self.k) - self.ck*(rp**2 + 2.0*y*rp*self.tan_thv*cos_phi + y**2*self.tan_thv_sq)
+        # root_func_jac = 1.0 - (5.0 - self.k)*np.power(y, 4.0 - self.k) - 2.0*self.ck*self.tan_thv*(cos_phi*rp + y*self.tan_thv)
+        return root_func_val  # , root_func_jac
 
-        root_val = root(root_func, g)
+
+    def _y_roots(self, phi, rp, g):
+        root_val = root(self._y_root_func, g, args=(phi, rp), jac=False)
         return (root_val.x, root_val['success'])
         # return root_val.x
-        # root_val = fsolve(root_func, g)
-        # return root_val
 
 
     def _y_min(self, phi, r):
@@ -305,8 +304,12 @@ class GrbaIntRP(GrbaIntBase):
         y = np.array(x_array[:, 0], dtype=np.float64)
         r = np.array(x_array[:, 1], dtype=np.float64)
         phi = np.array(x_array[:, 2], dtype=np.float64)
-        ymin = self._y_roots(phi, r, np.repeat(0.1, len(phi)))
-        ymax = self._y_roots(phi, r, np.repeat(0.9, len(phi)))
+        ymin = self._y_roots(phi, r, np.repeat(0.1, len(phi)))[0]
+        ymax = self._y_roots(phi, r, np.repeat(0.9, len(phi)))[0]
+        # print(y, "\n", r, "\n", phi)
+        # print(ymin)
+        # print(ymax)
+        # sys.exit(1)
         cos_phi = np.cos(phi)
         y[np.less(y, ymin)] = ymin[np.less(y, ymin)]
         y[np.greater(y, ymax)] = ymax[np.greater(y, ymax)]
@@ -314,6 +317,7 @@ class GrbaIntRP(GrbaIntBase):
         chi = self.chi(phi, r, y)
         chi_check = np.abs(chi - 1.0) < 1.0e-5
         chi[chi_check] = 1.0
+        # print(phi.min(), phi.max(), r.min(), r.max(), y.min(), y.max(), chi.min(), chi.max())
         if np.any(chi < 1.0):
             mask = chi < 1.0
             chi[mask] = 1.0
@@ -322,6 +326,7 @@ class GrbaIntRP(GrbaIntBase):
         else:
             val = (r + y*self.tan_thv*cos_phi)*self.intG(y, chi)  # *np.power(self.gammaL(phi, rp), 4.0*(1.0 - self.bg))
 
+        # print(val)
         return val
 
 
@@ -329,16 +334,16 @@ class GrbaIntRP(GrbaIntBase):
         # ymin = self._y_roots(phi, r, 0.1)[0]
         # ymax = self._y_roots(phi, r, 0.9)[0]
         # int_val = quad(self._integrand, ymin, ymax, args=(r, phi))
-        int_val = tplquad(self._integrand, 0.0, 2.0*np.pi, self._r_min, self._r_max, self._y_min, self._y_max)
+        int_val = tplquad(self._integrand, 0.0, 2.0*np.pi, self._r_min, self._r_max, self._y_min, self._y_max, epsabs=1.0e-5, epsrel=1.0e-5)
         return int_val
 
 
     def integrate_cuba(self):
         ndim = 3
         fdim = 1
-        xmin = np.array([0.0, 0.0, 0.0], dtype=np.float64)
+        xmin = np.array([0.0, self.TINY, 0.0], dtype=np.float64)
         xmax = np.array([1.0, 1.0, 2.0*np.pi], dtype=np.float64)
-        val, err = cubature(self._integrand_cuba, ndim, fdim, xmin, xmax, vectorized=True)
+        val, err = cubature(self._integrand_cuba, ndim, fdim, xmin, xmax, abserr=1e-03, relerr=1e-03, adaptive='h', vectorized=True)
         return (val, err)
 
 
@@ -839,15 +844,17 @@ def time():
 
 def test():
     grb = GrbaIntRP(0.0, 0.0)
-    # grb.integrate_cuba()
+    print(grb.integrate())
+    int_val, int_err = grb.integrate_cuba()
+    print(int_val, int_err)
     phi = np.repeat(0.0, 10)
-    rp = np.repeat(1.0e-33, 10)
+    rp = np.repeat(1.0e-19, 10)
     # phi = np.linspace(0, np.pi, 10)
     # rp = np.linspace(0, 1, 10)
     # g = np.repeat(0.1, 10)
     # roots = grb._y_roots(phi, rp, g)
-    ymin = grb._y_roots(phi, rp, np.repeat(0.1, 10))
-    ymax = grb._y_roots(phi, rp, np.repeat(0.9, 10))
+    ymin = grb._y_roots(phi, rp, np.repeat(0.1, 10))[0]
+    ymax = grb._y_roots(phi, rp, np.repeat(0.9, 10))[0]
     y = np.linspace(0, 1, 10)
     print(ymin)
     print(ymax)
@@ -856,8 +863,8 @@ def test():
 
 
 if __name__ == "__main__":
-    y_roots_rp()
-    # test()
+    # y_roots_rp()
+    test()
     # phi_integrand_plot(scaling="linear")
     # chi_test_plot(scaling="log")
     # for eps in np.logspace(-39, -19, 10, endpoint=False):
