@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     10478,        311]
-NotebookOptionsPosition[     10036,        294]
-NotebookOutlinePosition[     10395,        310]
-CellTagsIndexPosition[     10352,        307]
+NotebookDataLength[     10629,        314]
+NotebookOptionsPosition[     10188,        297]
+NotebookOutlinePosition[     10547,        313]
+CellTagsIndexPosition[     10504,        310]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -31,8 +31,11 @@ Cell[BoxData[{
   RowBox[{"Install", "[", "\"\<Vegas\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{"Install", "[", "\"\<Cuhre\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{
-   RowBox[{"Install", "[", "\"\<Cuhre\>\"", "]"}], ";"}], 
+   RowBox[{"Install", "[", "\"\<Divonne\>\"", "]"}], ";"}], 
   "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", 
    RowBox[{"Constant", " ", "definitions"}], 
@@ -231,7 +234,7 @@ Cell[BoxData[{
      RowBox[{"AccuracyGoal", "\[Rule]", "5"}], ",", 
      RowBox[{"Verbose", "\[Rule]", "0"}]}], "]"}], 
    "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{"Cuhre", "[", 
+ RowBox[{"Vegas", "[", 
   RowBox[{
    RowBox[{
     RowBox[{"(", 
@@ -269,12 +272,12 @@ Cell[BoxData[{
    3.717091567591485*^9, 3.717091594084049*^9}, {3.7170916247839127`*^9, 
    3.717091627268529*^9}, {3.717091658777617*^9, 3.7170919270310583`*^9}, {
    3.717091978800702*^9, 3.717092000334359*^9}, {3.717092039573464*^9, 
-   3.7170920965866117`*^9}, {3.717092311939039*^9, 
-   3.717092392330825*^9}},ExpressionUUID->"81f53815-9afe-46c7-93bf-\
+   3.7170920965866117`*^9}, {3.717092311939039*^9, 3.717092392330825*^9}, {
+   3.7170924756412363`*^9, 3.7170924762954473`*^9}, {3.717092542653055*^9, 
+   3.717092549419429*^9}},ExpressionUUID->"81f53815-9afe-46c7-93bf-\
 565712ab4ff8"],
 
-Cell[BoxData["\<\"/Users/laurenmcquillan/Documents/Nathan/GitHub/grba_int/\
-cuba-4.2\"\>"], "Output",
+Cell[BoxData["$Aborted"], "Output",
  CellChangeTimes->{
   3.717087235922777*^9, 3.717087400351226*^9, 3.717089436410228*^9, {
    3.717089572972167*^9, 3.7170896221062527`*^9}, {3.7170896866846333`*^9, 
@@ -287,9 +290,9 @@ cuba-4.2\"\>"], "Output",
    3.717091335931568*^9, {3.717091482792495*^9, 3.7170915018798933`*^9}, 
    3.71709157818336*^9, {3.717091918818839*^9, 3.717091943498602*^9}, 
    3.717092004245624*^9, {3.7170920611781054`*^9, 3.717092097689253*^9}, {
-   3.717092338947481*^9, 
-   3.717092383614151*^9}},ExpressionUUID->"7a753b11-3e23-49df-9328-\
-f8833552c289"]
+   3.717092338947481*^9, 3.717092383614151*^9}, 
+   3.717092551933899*^9},ExpressionUUID->"d1cb4afb-a520-428e-bd70-\
+870eb725f203"]
 }, Open  ]]
 },
 WindowSize->{808, 911},
@@ -310,8 +313,8 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 8406, 251, 780, "Input",ExpressionUUID->"81f53815-9afe-46c7-93bf-565712ab4ff8"],
-Cell[8989, 275, 1031, 16, 34, "Output",ExpressionUUID->"7a753b11-3e23-49df-9328-f8833552c289"]
+Cell[580, 22, 8602, 255, 801, "Input",ExpressionUUID->"81f53815-9afe-46c7-93bf-565712ab4ff8"],
+Cell[9185, 279, 987, 15, 34, "Output",ExpressionUUID->"d1cb4afb-a520-428e-bd70-870eb725f203"]
 }, Open  ]]
 }
 ]
