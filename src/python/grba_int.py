@@ -71,6 +71,16 @@ class GrbaIntBase(object):
         return chi
 
 
+    def x_sq(self, phi, r, y):
+        xsq = r**2 + y**2*self.tan_thv_sq + 2.0*y*self.tan_thv*cos_phi*r
+        return xsq
+
+
+    def chi(self, y, x):
+        chi = (y - self.ck*x**2) / np.power(y, 5.0 - self.k)
+        return chi
+
+
     def intG(self, y, chi):
         try:
             ig = np.power(y, self.y_exp)*np.power(chi, self.chi_exp)*np.power((7.0 - 2.0*self.k)*chi*np.power(y, 4.0 - self.k) + 1.0, self.bg - 2.0)
