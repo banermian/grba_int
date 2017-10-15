@@ -10,301 +10,286 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     16142,        335]
-NotebookOptionsPosition[     15258,        309]
-NotebookOutlinePosition[     15834,        331]
-CellTagsIndexPosition[     15746,        326]
+NotebookDataLength[     10478,        311]
+NotebookOptionsPosition[     10036,        294]
+NotebookOutlinePosition[     10395,        310]
+CellTagsIndexPosition[     10352,        307]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
 
 Cell[CellGroupData[{
-Cell[BoxData[
- RowBox[{"\[IndentingNewLine]", 
+Cell[BoxData[{
+ RowBox[{"Clear", "[", "\"\<Global`*\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "SetDirectory", "[", 
+   "\"\</Users/laurenmcquillan/Documents/Nathan/GitHub/grba_int/cuba-4.2\>\"",
+    "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Install", "[", "\"\<Vegas\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Install", "[", "\"\<Cuhre\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Constant", " ", "definitions"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"TORAD", "=", 
+   RowBox[{"\[Pi]", "/", "180."}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"THV", "=", 
+   RowBox[{"0.0", "*", "TORAD"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"K", "=", "0.0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"P", "=", "2.2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GA", "=", "1.0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"BG", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1.0", "-", "P"}], ")"}], "/", "2.0"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GK", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"4.0", "-", "K"}], ")"}], "*", 
+    SuperscriptBox["GA", "2"]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"CK", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"4.0", "-", "K"}], ")"}], "*", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"5.0", "-", "K"}], ")"}], "^", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"K", "-", "5.0"}], ")"}], "/", 
+       RowBox[{"(", 
+        RowBox[{"4.0", "-", "K"}], ")"}]}], ")"}]}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"TANTHV", "=", 
+   RowBox[{"Tan", "[", "THV", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"TANTHVSQ", "=", 
+   SuperscriptBox["TANTHV", "2"]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"SIN2THV", "=", 
+   RowBox[{"Sin", "[", 
+    RowBox[{"2.0", "*", "THV"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"COSTHV", "=", 
+   RowBox[{"Cos", "[", "THV", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SINTHV", "=", 
+   RowBox[{"Sin", "[", "THV", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"CHIEXP", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"7.0", "*", "K"}], "-", "23.0", "+", 
+      RowBox[{"BG", "*", 
+       RowBox[{"(", 
+        RowBox[{"13.0", "+", "K"}], ")"}]}]}], ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"6.0", "*", 
+      RowBox[{"(", 
+       RowBox[{"4.0", "-", "K"}], ")"}]}], ")"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"YEXP", "=", 
+    RowBox[{"0.5", "*", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"BG", "*", 
+        RowBox[{"(", 
+         RowBox[{"4.0", "-", "K"}], ")"}]}], "+", "4.0", "-", 
+       RowBox[{"3.0", "*", "K"}]}], ")"}]}]}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Function", " ", "definitions"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"chi", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+   FractionBox[
+    RowBox[{"y", "-", 
+     RowBox[{"CK", "*", 
+      SuperscriptBox["x", "2"]}]}], 
+    SuperscriptBox["y", 
+     RowBox[{"5", "-", "K"}]]]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"x", "[", 
+    RowBox[{"phi_", ",", "r_", ",", "y_"}], "]"}], ":=", 
+   SqrtBox[
+    RowBox[{
+     SuperscriptBox["r", "2"], "+", 
+     RowBox[{
+      SuperscriptBox["y", "2"], "*", "TANTHVSQ"}], "+", 
+     RowBox[{"2.0", "*", "y", "*", "TANTHV", "*", 
+      RowBox[{"Cos", "[", "phi", "]"}], "*", "r"}]}]]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"yMin", "[", 
+    RowBox[{"x_", "?", "NumericQ"}], "]"}], ":=", 
+   RowBox[{"y", "/.", 
+    RowBox[{"FindRoot", "[", 
+     RowBox[{
+      RowBox[{"y", "-", 
+       SuperscriptBox["y", 
+        RowBox[{"5", "-", "K"}]], "-", 
+       RowBox[{"CK", "*", 
+        SuperscriptBox["x", "2"]}]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"y", ",", "0.1"}], "}"}]}], "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"yMax", "[", 
+    RowBox[{"x_", "?", "NumericQ"}], "]"}], ":=", 
+   RowBox[{"y", "/.", 
+    RowBox[{"FindRoot", "[", 
+     RowBox[{
+      RowBox[{"y", "-", 
+       SuperscriptBox["y", 
+        RowBox[{"5", "-", "K"}]], "-", 
+       RowBox[{"CK", "*", 
+        SuperscriptBox["x", "2"]}]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"y", ",", "0.9"}], "}"}]}], "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{
    RowBox[{
-   "SetDirectory", "[", 
-    "\"\</Users/laurenmcquillan/Documents/Nathan/GitHub/grba_int/cuba-4.2\>\"\
-", "]"}], "\[IndentingNewLine]", 
-   RowBox[{"Install", "[", "\"\<Vegas\>\"", "]"}], "\[IndentingNewLine]", 
-   RowBox[{"?", "Vegas"}]}]}]], "Input",
+    RowBox[{"IG", "[", 
+     RowBox[{"y_", ",", "chi_"}], "]"}], ":=", 
+    RowBox[{
+     SuperscriptBox["y", "YEXP"], "*", 
+     SuperscriptBox["chi", "CHIEXP"], "*", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"7.0", "-", 
+           RowBox[{"2.0", "*", "K"}]}], ")"}], "*", "chi", "*", 
+         SuperscriptBox["y", 
+          RowBox[{"(", 
+           RowBox[{"4.0", "-", "K"}], ")"}]]}], "+", "1.0"}], ")"}], 
+      RowBox[{"BG", "-", "2.0"}]]}]}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Cuhre", "[", 
+     RowBox[{
+      RowBox[{"2.0", "*", "\[Pi]", "*", 
+       SqrtBox[
+        FractionBox[
+         RowBox[{"y", "-", 
+          RowBox[{"chi", "*", 
+           SuperscriptBox["y", 
+            RowBox[{"5", "-", "K"}]]}]}], "CK"]], "*", 
+       RowBox[{"IG", "[", 
+        RowBox[{"y", ",", "chi"}], "]"}]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"chi", ",", "1", ",", "Infinity"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"y", ",", 
+        SuperscriptBox["chi", 
+         FractionBox["1", 
+          RowBox[{"K", "-", "4"}]]], ",", "1"}], "}"}], ",", 
+      RowBox[{"AccuracyGoal", "\[Rule]", "5"}], ",", 
+      RowBox[{"Verbose", "\[Rule]", "0"}]}], "]"}], ";"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Cuhre", "[", 
+    RowBox[{
+     RowBox[{"2.0", "*", "\[Pi]", "*", "x", "*", 
+      RowBox[{"IG", "[", 
+       RowBox[{"y", ",", 
+        RowBox[{"chi", "[", 
+         RowBox[{"x", ",", "y"}], "]"}]}], "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"y", ",", 
+       RowBox[{"yMin", "[", "x", "]"}], ",", 
+       RowBox[{"yMax", "[", "x", "]"}]}], "}"}], ",", 
+     RowBox[{"AccuracyGoal", "\[Rule]", "5"}], ",", 
+     RowBox[{"Verbose", "\[Rule]", "0"}]}], "]"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Cuhre", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"r", "+", 
+      RowBox[{"y", "*", "TANTHV", "*", 
+       RowBox[{"Cos", "[", "phi", "]"}]}]}], ")"}], "*", 
+    RowBox[{"IG", "[", 
+     RowBox[{"y", ",", 
+      RowBox[{"chi", "[", 
+       RowBox[{
+        RowBox[{"x", "[", 
+         RowBox[{"phi", ",", "r", ",", "y"}], "]"}], ",", "y"}], "]"}]}], 
+     "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"phi", ",", "0", ",", 
+     RowBox[{"2", "*", "\[Pi]"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"r", ",", "0", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"y", ",", 
+     RowBox[{"yMin", "[", "r", "]"}], ",", 
+     RowBox[{"yMax", "[", "r", "]"}]}], "}"}], ",", 
+   RowBox[{"AccuracyGoal", "\[Rule]", "5"}], ",", 
+   RowBox[{"Verbose", "\[Rule]", "0"}]}], "]"}]}], "Input",
  CellChangeTimes->{{3.717087234436935*^9, 3.717087235219083*^9}, {
-  3.717087396522525*^9, 
-  3.717087398670764*^9}},ExpressionUUID->"81f53815-9afe-46c7-93bf-\
+   3.717087396522525*^9, 3.717087398670764*^9}, {3.717087578868059*^9, 
+   3.7170875789441357`*^9}, {3.717088973167068*^9, 3.717089636534706*^9}, {
+   3.717089684621024*^9, 3.717089720192717*^9}, {3.717089873846006*^9, 
+   3.717089901789379*^9}, 3.7170899417367907`*^9, {3.717089989166257*^9, 
+   3.717090027961728*^9}, {3.7170901968290854`*^9, 3.717090254097036*^9}, {
+   3.7170903028630457`*^9, 3.7170905057865267`*^9}, {3.717090547356488*^9, 
+   3.717090695090938*^9}, {3.717090910406266*^9, 3.717091091032099*^9}, {
+   3.7170911250971413`*^9, 3.717091125383122*^9}, {3.7170911608218822`*^9, 
+   3.7170911929811707`*^9}, {3.71709142830161*^9, 3.717091501101375*^9}, {
+   3.717091567591485*^9, 3.717091594084049*^9}, {3.7170916247839127`*^9, 
+   3.717091627268529*^9}, {3.717091658777617*^9, 3.7170919270310583`*^9}, {
+   3.717091978800702*^9, 3.717092000334359*^9}, {3.717092039573464*^9, 
+   3.7170920965866117`*^9}, {3.717092311939039*^9, 
+   3.717092392330825*^9}},ExpressionUUID->"81f53815-9afe-46c7-93bf-\
 565712ab4ff8"],
 
 Cell[BoxData["\<\"/Users/laurenmcquillan/Documents/Nathan/GitHub/grba_int/\
 cuba-4.2\"\>"], "Output",
- CellChangeTimes->{3.717087235922777*^9, 
-  3.717087400351226*^9},ExpressionUUID->"65e96a9d-5a18-4786-a168-\
-9b87af9e9d67"],
-
-Cell[BoxData[
- InterpretationBox[
-  RowBox[{
-   TagBox["LinkObject",
-    "SummaryHead"], "[", 
-   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
-    
-    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
-            PaneBox[
-             ButtonBox[
-              DynamicBox[
-               FEPrivate`FrontEndResource[
-               "FEBitmaps", "SquarePlusIconMedium"]], 
-              ButtonFunction :> (Typeset`open$$ = True), Appearance -> None, 
-              Evaluator -> Automatic, Method -> "Preemptive"], 
-             Alignment -> {Center, Center}, ImageSize -> 
-             Dynamic[{
-               Automatic, 3.5 CurrentValue["FontCapHeight"]/
-                AbsoluteCurrentValue[Magnification]}]], 
-            GraphicsBox[{
-              Thickness[0.038461538461538464`], {
-               FaceForm[{
-                 GrayLevel[0.93], 
-                 Opacity[1.]}], 
-               
-               FilledCurveBox[{{{1, 4, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}, {
-                1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}}}, {{{
-                25.499999999999996`, 2.5}, {25.499999999999996`, 
-                1.3953100000000003`}, {24.604699999999998`, 
-                0.49999999999999994`}, {23.5, 0.49999999999999994`}, {2.5, 
-                0.49999999999999994`}, {1.3953100000000003`, 
-                0.49999999999999994`}, {0.49999999999999994`, 
-                1.3953100000000003`}, {0.49999999999999994`, 2.5}, {
-                0.49999999999999994`, 23.5}, {0.49999999999999994`, 
-                24.604699999999998`}, {1.3953100000000003`, 
-                25.499999999999996`}, {2.5, 25.499999999999996`}, {23.5, 
-                25.499999999999996`}, {24.604699999999998`, 
-                25.499999999999996`}, {25.499999999999996`, 
-                24.604699999999998`}, {25.499999999999996`, 23.5}, {
-                25.499999999999996`, 2.5}}}]}, {
-               FaceForm[{
-                 RGBColor[0.5, 0.5, 0.5], 
-                 Opacity[1.]}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{20.5426, 
-                19.116799999999998`}, {16.3832, 21.876199999999997`}, {
-                16.3832, 20.021499999999996`}, {6.930469999999999, 
-                20.021499999999996`}, {6.930469999999999, 
-                18.212100000000003`}, {16.3832, 18.212100000000003`}, {
-                16.3832, 16.357399999999995`}, {20.5426, 
-                19.116799999999998`}}}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{5.30508, 13.8391}, {
-                9.46445, 11.079700000000003`}, {9.46445, 
-                12.933999999999997`}, {18.917199999999998`, 
-                12.933999999999997`}, {18.917199999999998`, 14.7438}, {
-                9.46445, 14.7438}, {9.46445, 16.598}, {5.30508, 13.8391}}}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{5.30508, 13.8391}, {
-                9.46445, 11.079700000000003`}, {9.46445, 
-                12.933999999999997`}, {18.917199999999998`, 
-                12.933999999999997`}, {18.917199999999998`, 14.7438}, {
-                9.46445, 14.7438}, {9.46445, 16.598}, {5.30508, 13.8391}}}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 
-                0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0,
-                 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, CompressedData["
-1:eJxTTMoPSmVmYGBgBGIRIGYC4sIjUTVcAooO8+XdOPpnKDg8YkwNXuen7JA2
-W/qycJSgw5sbHEde31CB82PFhGf3n1V1aFVgVz0zR8oBrF9czWFHsFXE/9Wy
-Dje0Dj4qiFWDy7cVLYptDVKH65/g6Xbu0HMNOB9sn4I23H6w+SWacD5De8DS
-tDQNB7ldC/alskg4aD2+nx6joeFgnPFi/oMZog5B9vlaQa/UHao9k7f0KUhA
-+D/UUPVbqML5jCB+oIpDzJHypGv8Eg4eGad3ikiqwM2T57H5LndPGW6eya7m
-GzMvKcH1o4cXABG3d/Y=
-                "]], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}}}, {{{14.163129999999999`, 
-                4.337966249999999}, {16.96813, 4.337966249999999}, {16.96813, 
-                5.047809999999999}, {14.98813, 5.047809999999999}, {14.98813, 
-                8.29796625}, {14.163129999999999`, 8.29796625}, {
-                14.163129999999999`, 4.337966249999999}}}]}}, Background -> 
-             GrayLevel[0.93], Axes -> False, AspectRatio -> 1, 
-             ImageSize -> {Automatic, 
-               Dynamic[
-               3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
-                 Magnification]), ImageSizeCache -> {45., {0., 9.}}]}, Frame -> 
-             True, FrameTicks -> None, FrameStyle -> Directive[
-               Thickness[Tiny], 
-               GrayLevel[0.7]]], 
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Name: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox[
-                  StyleBox[
-                   PaneBox[
-                   "\"'/Users/laurenmcquillan/Documents/Nathan/GitHub/grba_\
-int/cuba-4.2/Vegas'\"", ContentPadding -> False, FrameMargins -> 0, 
-                    StripOnInput -> True, BaselinePosition -> Baseline, 
-                    ImageSize -> {{1, 300}, Automatic}], LineBreakWithin -> 
-                   False], "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Link mode: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["Listen", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}], True -> GridBox[{{
-            PaneBox[
-             ButtonBox[
-              DynamicBox[
-               FEPrivate`FrontEndResource[
-               "FEBitmaps", "SquareMinusIconMedium"]], 
-              ButtonFunction :> (Typeset`open$$ = False), Appearance -> None, 
-              Evaluator -> Automatic, Method -> "Preemptive"], 
-             Alignment -> {Center, Center}, ImageSize -> 
-             Dynamic[{
-               Automatic, 3.5 CurrentValue["FontCapHeight"]/
-                AbsoluteCurrentValue[Magnification]}]], 
-            GraphicsBox[{
-              Thickness[0.038461538461538464`], {
-               FaceForm[{
-                 GrayLevel[0.93], 
-                 Opacity[1.]}], 
-               
-               FilledCurveBox[{{{1, 4, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}, {
-                1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}}}, {{{
-                25.499999999999996`, 2.5}, {25.499999999999996`, 
-                1.3953100000000003`}, {24.604699999999998`, 
-                0.49999999999999994`}, {23.5, 0.49999999999999994`}, {2.5, 
-                0.49999999999999994`}, {1.3953100000000003`, 
-                0.49999999999999994`}, {0.49999999999999994`, 
-                1.3953100000000003`}, {0.49999999999999994`, 2.5}, {
-                0.49999999999999994`, 23.5}, {0.49999999999999994`, 
-                24.604699999999998`}, {1.3953100000000003`, 
-                25.499999999999996`}, {2.5, 25.499999999999996`}, {23.5, 
-                25.499999999999996`}, {24.604699999999998`, 
-                25.499999999999996`}, {25.499999999999996`, 
-                24.604699999999998`}, {25.499999999999996`, 23.5}, {
-                25.499999999999996`, 2.5}}}]}, {
-               FaceForm[{
-                 RGBColor[0.5, 0.5, 0.5], 
-                 Opacity[1.]}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{20.5426, 
-                19.116799999999998`}, {16.3832, 21.876199999999997`}, {
-                16.3832, 20.021499999999996`}, {6.930469999999999, 
-                20.021499999999996`}, {6.930469999999999, 
-                18.212100000000003`}, {16.3832, 18.212100000000003`}, {
-                16.3832, 16.357399999999995`}, {20.5426, 
-                19.116799999999998`}}}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{5.30508, 13.8391}, {
-                9.46445, 11.079700000000003`}, {9.46445, 
-                12.933999999999997`}, {18.917199999999998`, 
-                12.933999999999997`}, {18.917199999999998`, 14.7438}, {
-                9.46445, 14.7438}, {9.46445, 16.598}, {5.30508, 13.8391}}}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, {{{5.30508, 13.8391}, {
-                9.46445, 11.079700000000003`}, {9.46445, 
-                12.933999999999997`}, {18.917199999999998`, 
-                12.933999999999997`}, {18.917199999999998`, 14.7438}, {
-                9.46445, 14.7438}, {9.46445, 16.598}, {5.30508, 13.8391}}}], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 
-                0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0,
-                 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}}, CompressedData["
-1:eJxTTMoPSmVmYGBgBGIRIGYC4sIjUTVcAooO8+XdOPpnKDg8YkwNXuen7JA2
-W/qycJSgw5sbHEde31CB82PFhGf3n1V1aFVgVz0zR8oBrF9czWFHsFXE/9Wy
-Dje0Dj4qiFWDy7cVLYptDVKH65/g6Xbu0HMNOB9sn4I23H6w+SWacD5De8DS
-tDQNB7ldC/alskg4aD2+nx6joeFgnPFi/oMZog5B9vlaQa/UHao9k7f0KUhA
-+D/UUPVbqML5jCB+oIpDzJHypGv8Eg4eGad3ikiqwM2T57H5LndPGW6eya7m
-GzMvKcH1o4cXABG3d/Y=
-                "]], 
-               
-               FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
-                0, 1, 0}, {0, 1, 0}}}, {{{14.163129999999999`, 
-                4.337966249999999}, {16.96813, 4.337966249999999}, {16.96813, 
-                5.047809999999999}, {14.98813, 5.047809999999999}, {14.98813, 
-                8.29796625}, {14.163129999999999`, 8.29796625}, {
-                14.163129999999999`, 4.337966249999999}}}]}}, Background -> 
-             GrayLevel[0.93], Axes -> False, AspectRatio -> 1, 
-             ImageSize -> {Automatic, 
-               Dynamic[
-               3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
-                 Magnification]), ImageSizeCache -> {45., {0., 9.}}]}, Frame -> 
-             True, FrameTicks -> None, FrameStyle -> Directive[
-               Thickness[Tiny], 
-               GrayLevel[0.7]]], 
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Name: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox[
-                  PaneBox[
-                  "\"'/Users/laurenmcquillan/Documents/Nathan/GitHub/grba_int/\
-cuba-4.2/Vegas'\"", ImageSize -> {{1, 500}, Automatic}, BaselinePosition -> 
-                   Baseline, ContentPadding -> False, FrameMargins -> 0, 
-                   StripOnInput -> True], "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Link mode: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["Listen", "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Link protocol: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["\"SharedMemory\"", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}]}, 
-       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
-     "SummaryPanel",
-     DisplayFunction->(
-      ButtonBox[#, Active -> False, Alignment -> Left, 
-       Appearance -> {
-        "Default" -> 
-         FrontEnd`FileName[{"Typeset", "SummaryBox"}, "Panel.9.png"]}, 
-       FrameMargins -> 7, BaseStyle -> {}, 
-       DefaultBaseStyle -> {"Panel", Background -> None}, BaselinePosition -> 
-       Baseline]& )],
-    DynamicModuleValues:>{}], "]"}],
-  LinkObject[
-  "'/Users/laurenmcquillan/Documents/Nathan/GitHub/grba_int/cuba-4.2/Vegas'", 
-   6831, 15],
-  Editable->False,
-  SelectWithContents->True,
-  Selectable->False]], "Output",
- CellChangeTimes->{3.717087235922777*^9, 
-  3.717087400605505*^9},ExpressionUUID->"6fdeefdd-0773-453a-a858-\
-b3d9698fa1fe"],
-
-Cell[BoxData["\<\"Vegas[f, {x, xmin, xmax}..] computes a numerical \
-approximation to the integral of the real scalar or vector function f.  The \
-output is a list with entries of the form {integral, error, chi-square \
-probability} for each component of the integrand.\"\>"], "Print", "PrintUsage",
- CellChangeTimes->{3.717087400735897*^9},
- CellTags->
-  "Info3503717069400-7285191",ExpressionUUID->"dc398674-757c-42af-804c-\
-4546affcdaf7"]
+ CellChangeTimes->{
+  3.717087235922777*^9, 3.717087400351226*^9, 3.717089436410228*^9, {
+   3.717089572972167*^9, 3.7170896221062527`*^9}, {3.7170896866846333`*^9, 
+   3.717089690955133*^9}, 3.717089902804843*^9, 3.717089943819787*^9, 
+   3.7170899985776873`*^9, 3.7170900354354563`*^9, 3.717090260110327*^9, {
+   3.7170903375349903`*^9, 3.7170903886625*^9}, 3.717090473204838*^9, 
+   3.717090505999379*^9, {3.717090606457756*^9, 3.7170907027558737`*^9}, {
+   3.717090912335091*^9, 3.717090919010549*^9}, {3.717090972739677*^9, 
+   3.717091005893272*^9}, 3.717091092832288*^9, 3.71709116777265*^9, 
+   3.717091335931568*^9, {3.717091482792495*^9, 3.7170915018798933`*^9}, 
+   3.71709157818336*^9, {3.717091918818839*^9, 3.717091943498602*^9}, 
+   3.717092004245624*^9, {3.7170920611781054`*^9, 3.717092097689253*^9}, {
+   3.717092338947481*^9, 
+   3.717092383614151*^9}},ExpressionUUID->"7a753b11-3e23-49df-9328-\
+f8833552c289"]
 }, Open  ]]
 },
 WindowSize->{808, 911},
@@ -317,29 +302,18 @@ StyleDefinitions->"Default.nb"
 
 (* Internal cache information *)
 (*CellTagsOutline
-CellTagsIndex->{
- "Info3503717069400-7285191"->{
-  Cell[14801, 299, 441, 7, 91, "Print",ExpressionUUID->"dc398674-757c-42af-804c-4546affcdaf7",
-   CellTags->"Info3503717069400-7285191"]}
- }
+CellTagsIndex->{}
 *)
 (*CellTagsIndex
-CellTagsIndex->{
- {"Info3503717069400-7285191", 15584, 320}
- }
+CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 498, 12, 94, "Input",ExpressionUUID->"81f53815-9afe-46c7-93bf-565712ab4ff8"],
-Cell[1081, 36, 225, 4, 34, "Output",ExpressionUUID->"65e96a9d-5a18-4786-a168-9b87af9e9d67"],
-Cell[1309, 42, 13489, 255, 66, "Output",ExpressionUUID->"6fdeefdd-0773-453a-a858-b3d9698fa1fe"],
-Cell[14801, 299, 441, 7, 91, "Print",ExpressionUUID->"dc398674-757c-42af-804c-4546affcdaf7",
- CellTags->"Info3503717069400-7285191"]
+Cell[580, 22, 8406, 251, 780, "Input",ExpressionUUID->"81f53815-9afe-46c7-93bf-565712ab4ff8"],
+Cell[8989, 275, 1031, 16, 34, "Output",ExpressionUUID->"7a753b11-3e23-49df-9328-f8833552c289"]
 }, Open  ]]
 }
 ]
 *)
-
-(* End of internal cache information *)
 

@@ -77,6 +77,11 @@ class GrbaIntBase(object):
 
 
     def chi(self, y, x):
+        if type(y) == np.ndarray:
+            y[np.equal(0.0, y)] = self.TINY
+        elif y == 0.0:
+            y = self.TINY
+
         chi = (y - self.ck*x**2) / np.power(y, 5.0 - self.k)
         return chi
 
@@ -121,7 +126,7 @@ class GrbaIntStandard(GrbaIntBase):
 
     def _integrand(self, y, x):
         # chi = (y - self.ck*x**2) / np.power(y, 5.0 - self.k)
-        chi = self.chi(0.0, x, y)
+        chi = self.chi(y, x)
         return x*self.intG(y, chi)
 
 
